@@ -1,2 +1,14 @@
-﻿  Source.cpp
-  pacMan.vcxproj -> D:\pacMan\pacMan\x64\Debug\pacMan.exe
+﻿  Animation.cpp
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Animation.cpp(9,38): warning C4244: '=': conversion from 'float' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Animation.cpp(10,39): warning C4244: '=': conversion from 'float' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+  Source.cpp
+  Generating Code...
+  pacMan.vcxproj -> C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\x64\Debug\pacMan.exe

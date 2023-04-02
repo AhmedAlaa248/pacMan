@@ -1,5 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <string>
+#include "Animation.h"
 using namespace sf;
 using namespace std;
 
@@ -19,6 +21,30 @@ void DrawBoard(int board[19][19])
         cout << '\n';
     }
 }
+
+class Movement
+{
+public:
+    Movement() {};
+
+    void movementDirection(const int& dir, sf::Sprite& spritesheet)
+    {
+        switch (dir) {
+        case 0:
+            spritesheet.move(sf::Vector2f(0, -3));
+            break;
+        case 1:
+            spritesheet.move(sf::Vector2f(0, 3));
+            break;
+        case 2:
+            spritesheet.move(sf::Vector2f(3, 0));
+            break;
+        case 3:
+            spritesheet.move(sf::Vector2f(-3, 0));
+            break;
+        }
+    }
+};
 
 int main()
 {
@@ -51,18 +77,24 @@ int main()
 
     // Create the window
     RenderWindow window(sf::VideoMode(1920, 1080), "Pac-Man");
+    Vector2i source(DIRECTION_X_DOWN_INITAL, DIRECTION_Y_DOWN_INITAL);
+    Movement movement;
+    
 
     // Set the background color
     window.clear(Color::Black);
 
     // Load the images
     Texture pacManTexture;
-    pacManTexture.loadFromFile("Textures/pcManBg.png");
+    pacManTexture.loadFromFile("Textures/pacmanSprite.png");
 
     // Create the Pac-Man sprite
     Sprite pacMan;
     pacMan.setTexture(pacManTexture);
-
+    pacMan.setScale(3, 3);
+    Animation animation(&pacManTexture, Vector2u(3, 4), 0.3f);
+    float deltaTime = 0.0f;
+    sf::Clock clock;
     //pacMan.setPosition(1920/2, 1080/2);
 
 
@@ -76,6 +108,8 @@ int main()
    // Main loop
     while (window.isOpen())
     {
+        deltaTime = clock.restart().asSeconds();
+
         // Handle events
         Event event;
         while (window.pollEvent(event))
@@ -90,21 +124,30 @@ int main()
         // Move Pac-Man
         if (Keyboard::isKeyPressed(Keyboard::Left))
         {
-            pacMan.move(-1, 0);
+            movement.movementDirection(3, pacMan);
+            source.x = DIRECTION_X_LEFT_INITAL;
+            source.y = DIRETION_Y_LEFT_INITAL;
         }
         else if (Keyboard::isKeyPressed(Keyboard::Right))
         {
-            pacMan.move(1, 0);
+            movement.movementDirection(2, pacMan);
+            source.x = DIRECTION_X_RIGHT_INITAL;
+            source.y = DIRECTION_Y_RIGHT_INITAL;
         }
         else if (Keyboard::isKeyPressed(Keyboard::Up))
         {
-            pacMan.move(0, -1);
+            movement.movementDirection(0, pacMan);
+            source.x = DIRECTION_X_UP_INITAL;
+            source.y = DIRECTION_Y_UP_INITAL;
         }
         else if (Keyboard::isKeyPressed(Keyboard::Down))
         {
-            pacMan.move(0, 1);
+            movement.movementDirection(1, pacMan);
+            source.x = DIRECTION_X_DOWN_INITAL;
+            source.y = DIRECTION_Y_DOWN_INITAL;
         }
-
+        animation.updateImage(0, deltaTime, true);
+        pacMan.setTextureRect(animation.uvRect);
         // Draw the Pac-Man sprite
         window.clear(Color::Black);
         window.draw(pacMan);
