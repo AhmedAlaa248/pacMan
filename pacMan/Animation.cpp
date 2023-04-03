@@ -45,4 +45,4 @@ void Animation::updateImage(unsigned row, float deltaTime, bool faceRight)
 		uvRect.width = -abs(uvRect.width);
 
 	}
-}
+}  

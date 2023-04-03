@@ -31,16 +31,16 @@ public:
     {
         switch (dir) {
         case 0:
-            spritesheet.move(sf::Vector2f(0, -3));
+            spritesheet.move(sf::Vector2f(0, -.5));
             break;
         case 1:
-            spritesheet.move(sf::Vector2f(0, 3));
+            spritesheet.move(sf::Vector2f(0, .5));
             break;
         case 2:
-            spritesheet.move(sf::Vector2f(3, 0));
+            spritesheet.move(sf::Vector2f(.5, 0));
             break;
         case 3:
-            spritesheet.move(sf::Vector2f(-3, 0));
+            spritesheet.move(sf::Vector2f(-.5, 0));
             break;
         }
     }
@@ -48,6 +48,8 @@ public:
 
 int main()
 {
+    int x = 0;
+    int y = 0;
     //0 wall(black)
     //1 coin
     //2 wall(blue)
@@ -86,15 +88,19 @@ int main()
 
     // Load the images
     Texture pacManTexture;
-    pacManTexture.loadFromFile("Textures/pacmanSprite.png");
+    pacManTexture.loadFromFile("sprite sheet pacman.png");
 
     // Create the Pac-Man sprite
     Sprite pacMan;
     pacMan.setTexture(pacManTexture);
-    pacMan.setScale(3, 3);
-    Animation animation(&pacManTexture, Vector2u(3, 4), 0.3f);
+    
+    pacMan.setTextureRect(IntRect(x*56, y *56 ,56, 56));
+    pacMan.setPosition(960, 500);
+   
+   
+  /*  Animation animation(&pacManTexture, Vector2u(3, 4), 0.3f);
     float deltaTime = 0.0f;
-    sf::Clock clock;
+    sf::Clock clock;*/
     //pacMan.setPosition(1920/2, 1080/2);
 
 
@@ -108,7 +114,7 @@ int main()
    // Main loop
     while (window.isOpen())
     {
-        deltaTime = clock.restart().asSeconds();
+        //deltaTime = clock.restart().asSeconds();
 
         // Handle events
         Event event;
@@ -122,32 +128,54 @@ int main()
         }
 
         // Move Pac-Man
-        if (Keyboard::isKeyPressed(Keyboard::Left))
+        
+        if (Keyboard::isKeyPressed(Keyboard::Left)&& pacMan.getPosition().x>0)
         {
             movement.movementDirection(3, pacMan);
             source.x = DIRECTION_X_LEFT_INITAL;
             source.y = DIRETION_Y_LEFT_INITAL;
-        }
-        else if (Keyboard::isKeyPressed(Keyboard::Right))
+            x++;
+            x %= 3;
+            y = 2;
+            pacMan.setTextureRect(IntRect(x * 56, y * 56, 56, 56));
+                
+           }
+        else if (Keyboard::isKeyPressed(Keyboard::Right)&& pacMan.getPosition().x < 1864)
         {
             movement.movementDirection(2, pacMan);
             source.x = DIRECTION_X_RIGHT_INITAL;
             source.y = DIRECTION_Y_RIGHT_INITAL;
+            x++;
+            x %= 3;
+            y = 0;
+            pacMan.setTextureRect(IntRect(x * 56, y*56 ,56, 56));
+            
         }
-        else if (Keyboard::isKeyPressed(Keyboard::Up))
+        else if (Keyboard::isKeyPressed(Keyboard::Up)&&pacMan.getPosition().y >0)
         {
             movement.movementDirection(0, pacMan);
             source.x = DIRECTION_X_UP_INITAL;
             source.y = DIRECTION_Y_UP_INITAL;
+          
+            x++;
+            x %= 3;
+            y = 3;
+            pacMan.setTextureRect(IntRect(x * 56, y * 56, 56, 56));
+            
         }
-        else if (Keyboard::isKeyPressed(Keyboard::Down))
+        else if (Keyboard::isKeyPressed(Keyboard::Down)&& pacMan.getPosition().y<1024)
         {
             movement.movementDirection(1, pacMan);
             source.x = DIRECTION_X_DOWN_INITAL;
             source.y = DIRECTION_Y_DOWN_INITAL;
+            x++;
+            x %= 3;
+            y = 1;
+            pacMan.setTextureRect(IntRect(x * 56, y * 56, 56, 56));
+            
         }
-        animation.updateImage(0, deltaTime, true);
-        pacMan.setTextureRect(animation.uvRect);
+        //animation.updateImage(0, deltaTime, true);
+      //  pacMan.setTextureRect(animation.uvRect);
         // Draw the Pac-Man sprite
         window.clear(Color::Black);
         window.draw(pacMan);

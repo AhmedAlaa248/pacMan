@@ -1,2 +1,3 @@
 D:\pacMan\pacMan\x64\Debug\pacMan.exe
 C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\x64\Debug\pacMan.exe
+C:\Users\omark\Desktop\pacMan\pacMan\x64\Debug\pacMan.exe
