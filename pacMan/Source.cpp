@@ -5,7 +5,9 @@
 using namespace sf;
 using namespace std;
 
-void DrawBoard(int board[19][19])
+const int arrSize = 19;
+
+/*void DrawBoard(int board[19][19])
 {
     for (int i = 0; i < 19; i++)
     {
@@ -20,6 +22,44 @@ void DrawBoard(int board[19][19])
         }
         cout << '\n';
     }
+}*/
+
+void drawMaze(int arr[arrSize][arrSize], Sprite maze[][arrSize], Texture& wall, Texture& coin) {
+
+    //0 wall
+    //1 coin
+    int board[arrSize][arrSize] = {
+         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+         {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+         {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0},
+         {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+         {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},
+         {0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0},
+         {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0},
+         {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0},
+         {0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0},
+         {0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},
+         {0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},
+         {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+         {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
+         {0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0},
+         {0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0},
+         {0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0},
+         {0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
+         {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    for (int i = 0; i < arrSize; i++) {
+        for (int j = 0; j < arrSize; j++) {
+            if (board[i][j] == 0){
+                maze[i][j].setTexture(wall);
+                maze[i][j].setPosition(i, j);
+            }
+            
+        }
+    }
+
 }
 
 class Movement
@@ -50,7 +90,7 @@ int main()
 {
     int x = 0;
     int y = 0;
-    //0 wall(black)
+   /* //0 wall(black)
     //1 coin
     //2 wall(blue)
     int board[19][19] = {
@@ -74,7 +114,7 @@ int main()
          {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
          {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     };
-    DrawBoard(board);
+    DrawBoard(board);*/
 
 
     // Create the window
@@ -82,6 +122,15 @@ int main()
     Vector2i source(DIRECTION_X_DOWN_INITAL, DIRECTION_Y_DOWN_INITAL);
     Movement movement;
     
+
+    int boar[arrSize][arrSize];
+    Texture wall, coin;
+    wall.loadFromFile("Textures/Wall.png");
+    coin.loadFromFile("Textures/coin.png");
+
+    Sprite maze[arrSize][arrSize];
+
+    drawMaze(boar, maze, wall, coin);
 
     // Set the background color
     window.clear(Color::Black);
@@ -182,10 +231,11 @@ int main()
             
         }
         //animation.updateImage(0, deltaTime, true);
-      //  pacMan.setTextureRect(animation.uvRect);
+        //  pacMan.setTextureRect(animation.uvRect);
         // Draw the Pac-Man sprite
         window.clear(Color::Black);
         window.draw(pacMan);
+        window.draw(maze[0][0]);
         window.display();
     }
 
