@@ -7,23 +7,6 @@ using namespace std;
 
 const int arrSize = 19;
 
-/*void DrawBoard(int board[19][19])
-{
-    for (int i = 0; i < 19; i++)
-    {
-        for (int j = 0; j < 19; j++)
-        {
-            if (board[i][j] == 0)
-                cout << "\033[1;40m   \033[0m";  //40 # Black
-            else if (board[i][j] == 1)
-                cout << "\033[1;46m***\033[0m"; //46 # Cyan
-            else if (board[i][j] == 2)
-                cout << "\033[1;46m   \033[0m";
-        }
-        cout << '\n';
-    }
-}*/
-
 void drawMaze(int arr[arrSize][arrSize], Sprite maze[][arrSize], Texture& wall, Texture& coin) {
 
     //0 wall
@@ -38,9 +21,9 @@ void drawMaze(int arr[arrSize][arrSize], Sprite maze[][arrSize], Texture& wall, 
          {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0},
          {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0},
          {0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0},
-         {0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},
-         {0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},
-         {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+         {0, 0, 0, 0, 0, 1, 0, 2, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},
+         {0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},
+         {0, 0, 1, 1, 1, 1, 1, 2, 2, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
          {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
          {0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0},
          {0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0},
@@ -54,7 +37,12 @@ void drawMaze(int arr[arrSize][arrSize], Sprite maze[][arrSize], Texture& wall, 
         for (int j = 0; j < arrSize; j++) {
             if (board[i][j] == 0){
                 maze[i][j].setTexture(wall);
-                maze[i][j].setPosition(i, j);
+                maze[i][j].setPosition(i*50, j*50);
+                maze[i][j].setScale(3.4, 3.4);
+            }
+            else if (board[i][j] == 1) {
+                maze[i][j].setTexture(coin);
+                maze[i][j].setPosition(i * 50.5, j * 50.5);
             }
             
         }
@@ -90,32 +78,6 @@ int main()
 {
     int x = 0;
     int y = 0;
-   /* //0 wall(black)
-    //1 coin
-    //2 wall(blue)
-    int board[19][19] = {
-         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-         {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
-         {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0},
-         {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
-         {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},
-         {0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0},
-         {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0},
-         {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0},
-         {0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0},
-         {0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},
-         {0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},
-         {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
-         {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
-         {0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0},
-         {0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0},
-         {0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0},
-         {0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0},
-         {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
-         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    };
-    DrawBoard(board);*/
-
 
     // Create the window
     RenderWindow window(sf::VideoMode(1920, 1080), "Pac-Man");
@@ -145,7 +107,7 @@ int main()
     
     pacMan.setTextureRect(IntRect(x*17, y *15 ,17, 15));
     pacMan.setPosition(960, 500);
-    pacMan.setScale(5, 5);
+    pacMan.setScale(3, 3);
     sf::Clock clock;
     sf::Time prevTime = clock.getElapsedTime();
 
@@ -156,13 +118,6 @@ int main()
     sf::Clock clock;*/
     //pacMan.setPosition(1920/2, 1080/2);
 
-
-  /* if (pacMan.getTexture)
-   {
-       std::cout << "Error loading Pac-Man image" << std::endl;
-       return 1;
-   }
-   else cout << "123464362634";*/
 
    // Main loop
     while (window.isOpen())
@@ -235,7 +190,12 @@ int main()
         // Draw the Pac-Man sprite
         window.clear(Color::Black);
         window.draw(pacMan);
-        window.draw(maze[0][0]);
+        for (int i = 0 ; i < arrSize; i++)
+        {
+            for (int j = 0; j < arrSize; j++) {
+                window.draw(maze[i][j]);
+            }
+        }
         window.display();
     }
 

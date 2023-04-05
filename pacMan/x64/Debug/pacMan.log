@@ -1,14 +1,17 @@
 ﻿  Source.cpp
-D:\pacMan\pacMan\Source.cpp(57,43): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\pacMan\pacMan\Source.cpp(57,40): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\pacMan\pacMan\Source.cpp(219,61): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(40,47): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(40,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(41,45): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(45,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(45,42): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(174,61): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=int
           ]
-D:\pacMan\pacMan\Source.cpp(219,45): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(174,45): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=int
           ]
-  pacMan.vcxproj -> D:\pacMan\pacMan\x64\Debug\pacMan.exe
+  pacMan.vcxproj -> D:\FCIS ASU\Projects\pacMan\pacMan\x64\Debug\pacMan.exe
