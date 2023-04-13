@@ -121,7 +121,7 @@ void pacManDrawing() {
     Images[6].sprite.setTexture(Images[6].texture);
     Images[6].sprite.setTextureRect(IntRect(xPosition * 17, yPositon * 15, 17, 15));
     Images[6].sprite.setPosition(xStartPosition[6], yStartPosition[6]);
-    Images[6].sprite.setScale(3, 3);
+    Images[6].sprite.setScale(2.5, 2.5);
 
 }
 
@@ -182,7 +182,47 @@ void ghostsDrawing() {
     }
 }
 
-void updateCoinCollision(Sprite maze[rows][columns]) {
+void wallCollision(Sprite& body , Sprite maze[rows][columns]) {
+    //FloatRect wallBoundes = sprite.getGlobalBounds();
+    //FloatRect playerBoundes = Images[1].sprite.getGlobalBounds();
+    for (int i = 0; i < rows; i++)
+    { 
+        for (int j = 0; j < columns; j++) {
+            if (board[i][j] == 0) {
+                //check collision from left of the wall
+                if (body.getGlobalBounds().intersects(FloatRect(maze[i][j].getPosition().x,
+                                                                 maze[i][j].getPosition().y,
+                                                                 1.0f, maze[i][j].getGlobalBounds().height))) {
+                    Images[6].sprite.move(-pacManSpeed, 0);
+                }
+               
+                //check collision from right of the wall
+                if (body.getGlobalBounds().intersects(FloatRect(maze[i][j].getPosition().x + maze[i][j].getGlobalBounds().width,
+                                                                maze[i][j].getPosition().y,
+                                                                 1.0f , maze[i][j].getGlobalBounds().height))) {
+                    Images[6].sprite.move(pacManSpeed, 0);
+                }
+
+                //check collision from top of the wall
+                if (body.getGlobalBounds().intersects(FloatRect(maze[i][j].getPosition().x,
+                                                                maze[i][j].getPosition().y,
+                                                                maze[i][j].getGlobalBounds().width , 1.0f))) {
+                    Images[6].sprite.move(0, -pacManSpeed);
+                }
+
+                //check collision from bottom of the wall
+                if (body.getGlobalBounds().intersects(FloatRect(maze[i][j].getPosition().x ,
+                                                                maze[i][j].getPosition().y + maze[i][j].getGlobalBounds().height,
+                                                                maze[i][j].getGlobalBounds().width, 1.0f))) {
+                    Images[6].sprite.move(0, pacManSpeed);
+                }
+
+            }
+        }
+    }
+    }
+
+void coinCollision(Sprite maze[rows][columns]) {
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
             if (Images[6].sprite.getGlobalBounds().intersects(maze[i][j].getGlobalBounds())) {
@@ -221,7 +261,8 @@ int main()
         }
 
         movingPacman(Images[6].sprite, xPosition , yPositon);
-        updateCoinCollision(maze);
+        wallCollision(Images[6].sprite, maze);
+        coinCollision(maze);
         
 
         //Drawing sprites
