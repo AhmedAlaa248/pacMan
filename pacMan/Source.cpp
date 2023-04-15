@@ -8,7 +8,10 @@ using namespace std;
 const int rows = 23;
 const int columns = 21;
 const float pacManSpeed = 0.6;
+
 int score=0;
+
+Font font;
 
 struct images
 {
@@ -184,38 +187,37 @@ void ghostsDrawing() {
 }
 
 void wallCollision(Sprite& body , Sprite maze[rows][columns]) {
-    //FloatRect wallBoundes = sprite.getGlobalBounds();
-    //FloatRect playerBoundes = Images[1].sprite.getGlobalBounds();
+    FloatRect playerBoundes = body.getGlobalBounds();
     for (int i = 0; i < rows; i++)
     { 
         for (int j = 0; j < columns; j++) {
             if (board[i][j] == 0) {
                 //check collision from left of the wall
-                if (body.getGlobalBounds().intersects(FloatRect(maze[i][j].getPosition().x,
+                if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
                                                                  maze[i][j].getPosition().y,
                                                                  1.0f, maze[i][j].getGlobalBounds().height))) {
-                    Images[6].sprite.move(-pacManSpeed, 0);
+                    body.move(-pacManSpeed, 0);
                 }
                
                 //check collision from right of the wall
-                if (body.getGlobalBounds().intersects(FloatRect(maze[i][j].getPosition().x + maze[i][j].getGlobalBounds().width,
+                if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x + maze[i][j].getGlobalBounds().width,
                                                                 maze[i][j].getPosition().y,
                                                                  1.0f , maze[i][j].getGlobalBounds().height))) {
-                    Images[6].sprite.move(pacManSpeed, 0);
+                    body.move(pacManSpeed, 0);
                 }
 
                 //check collision from top of the wall
-                if (body.getGlobalBounds().intersects(FloatRect(maze[i][j].getPosition().x,
+                if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
                                                                 maze[i][j].getPosition().y,
                                                                 maze[i][j].getGlobalBounds().width , 1.0f))) {
-                    Images[6].sprite.move(0, -pacManSpeed);
+                    body.move(0, -pacManSpeed);
                 }
 
                 //check collision from bottom of the wall
-                if (body.getGlobalBounds().intersects(FloatRect(maze[i][j].getPosition().x ,
+                if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x ,
                                                                 maze[i][j].getPosition().y + maze[i][j].getGlobalBounds().height,
                                                                 maze[i][j].getGlobalBounds().width, 1.0f))) {
-                    Images[6].sprite.move(0, pacManSpeed);
+                    body.move(0, pacManSpeed);
                 }
 
             }
@@ -237,20 +239,55 @@ int coinCollision(Sprite maze[rows][columns]) {
     return score;
 }
 
+void scoreDraw(RenderWindow& window) {
+    String scoredisplay = "SCORE: " + to_string(score);
+
+    font.loadFromFile("Fonts/actionj.ttf");
+
+    Text scoreText;
+    scoreText.setFont(font);
+    scoreText.setCharacterSize(50);
+    scoreText.setFillColor(Color::Yellow);
+    scoreText.setPosition(120, 50);
+    scoreText.setString(scoredisplay);
+
+    window.draw(scoreText);
+}
+
+void timerDraw(RenderWindow& window  , Clock clock) {
+    font.loadFromFile("Fonts/actionj.ttf");
+    Text timeText;
+
+    timeText.setFont(font);
+    timeText.setCharacterSize(45);
+    timeText.setPosition(1500, 25);
+
+    Time passed;
+    passed += clock.restart();
+
+    int minutes = passed.asSeconds() / 60;
+    int seconds = passed.asSeconds() - minutes * 60;
+
+    string timeWord = (minutes < 10 ? "0" : "") + to_string(minutes) + ':'
+        + (seconds < 10 ? "0" : "") + to_string(seconds);
+
+    timeText.setString(timeWord);
+
+    window.draw(timeText);
+}
+
 int main()
 {
     // Create the window
     RenderWindow window(VideoMode(1920, 1080), "Pac-Man");
     
-   
     Sprite maze[rows][columns];
+    Clock clock;
     
     drawMaze(maze);
     pacManDrawing();
     ghostsDrawing();
     
-
-
     // Main loop
     while (window.isOpen())
     {
@@ -269,25 +306,11 @@ int main()
         wallCollision(Images[6].sprite, maze);
         coinCollision(maze);
         
-        String scoredisplay = "SCORE : " + to_string(score);
-
-        Font font;
-        font.loadFromFile("fonts/actionj.ttf");
-
-        Text text;
-        text.setFont(font);
-        text.setCharacterSize(50);
-        text.setFillColor(Color::Yellow);
-        text.setPosition(120,50);
-        text.setString(scoredisplay);
-
         //Drawing sprites
         window.clear(Color::Black);
         for (int i = 2; i < 7; i++) {
             window.draw(Images[i].sprite);
         }
-
-
 
         // Draw the maze
         for (int i = 0 ; i < rows; i++){
@@ -296,12 +319,10 @@ int main()
             }
         }
 
-        //draw text
-        window.draw(text);
-
-
+        timerDraw(window, clock);
+        scoreDraw(window);
+        
         window.display();
-
    
     }
     return 0;
