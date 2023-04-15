@@ -8,6 +8,7 @@ using namespace std;
 const int rows = 23;
 const int columns = 21;
 const float pacManSpeed = 0.6;
+int score=0;
 
 struct images
 {
@@ -222,30 +223,34 @@ void wallCollision(Sprite& body , Sprite maze[rows][columns]) {
     }
     }
 
-void coinCollision(Sprite maze[rows][columns]) {
+int coinCollision(Sprite maze[rows][columns]) {
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
             if (Images[6].sprite.getGlobalBounds().intersects(maze[i][j].getGlobalBounds())) {
                 if (board[i][j] == 1) {
                     maze[i][j].setPosition(2000000, 2000000);
+                    score++;
                 }
             }
         }
     }
+    return score;
 }
 
 int main()
 {
     // Create the window
     RenderWindow window(VideoMode(1920, 1080), "Pac-Man");
+    
    
     Sprite maze[rows][columns];
     
     drawMaze(maze);
     pacManDrawing();
     ghostsDrawing();
-
     
+
+
     // Main loop
     while (window.isOpen())
     {
@@ -264,6 +269,17 @@ int main()
         wallCollision(Images[6].sprite, maze);
         coinCollision(maze);
         
+        String scoredisplay = "SCORE : " + to_string(score);
+
+        Font font;
+        font.loadFromFile("fonts/actionj.ttf");
+
+        Text text;
+        text.setFont(font);
+        text.setCharacterSize(50);
+        text.setFillColor(Color::Yellow);
+        text.setPosition(120,50);
+        text.setString(scoredisplay);
 
         //Drawing sprites
         window.clear(Color::Black);
@@ -271,13 +287,22 @@ int main()
             window.draw(Images[i].sprite);
         }
 
+
+
         // Draw the maze
         for (int i = 0 ; i < rows; i++){
             for (int j = 0; j < columns; j++){
                 window.draw(maze[i][j]);
             }
         }
+
+        //draw text
+        window.draw(text);
+
+
         window.display();
+
+   
     }
     return 0;
 }
