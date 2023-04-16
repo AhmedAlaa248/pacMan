@@ -254,12 +254,12 @@ RectangleShape updateTarget(int ghostId) {
         break;
     case 4:
         target = { xRightCorner,yRightCorner };
-        circle.setFillColor(Color::Blue);
+        circle.setFillColor(Color::Cyan);
         circle.setPosition(target.x, target.y);
         break;
     case 5:
-        target = { xStart - cellSize ,yRightCorner };
-        circle.setFillColor(Color::Yellow);
+        target = { xStart - cellSize,yRightCorner };
+        circle.setFillColor(Color(250, 165, 0));
         circle.setPosition(target.x, target.y);
         break;
     }
