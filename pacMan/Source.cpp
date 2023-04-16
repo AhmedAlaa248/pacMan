@@ -7,17 +7,23 @@ using namespace std;
 
 const int rows = 23;
 const int columns = 21;
+const float cellSize = 45;
 const float pacManSpeed = 0.6;
-
-int score=0;
-
-Font font;
+const float mazeWidth = (columns + 1) * cellSize;
+const float mazeHeight = rows * cellSize;
 
 struct images
 {
     Texture texture;
     Sprite sprite;
 };
+
+struct Position
+{
+    float x;
+    float y;
+};
+Position position , target; 
 
 // 0 wall
    // 1 coin
@@ -59,6 +65,13 @@ int xPosition = 0;
 int yPositon = 0;
 int xStartPosition[8];
 int yStartPosition[8];
+int modeWidth = 1920, modeHeight = 1080;
+float xStart = (modeWidth - mazeWidth) / 2;
+float yStart = (modeHeight - mazeHeight) / 2;
+
+int score = 0;
+
+Font font;
 
 // 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan 
 images Images[8];
@@ -66,9 +79,7 @@ images Images[8];
 void drawMaze(Sprite maze[rows][columns]) {
     Images[0].texture.loadFromFile("Textures/Wall.png");
     Images[1].texture.loadFromFile("Textures/coin.png");
-    
    
-
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
 
@@ -76,49 +87,48 @@ void drawMaze(Sprite maze[rows][columns]) {
             {
                 case 0:
                     maze[i][j].setTexture(Images[0].texture);
-                    maze[i][j].setPosition(480 + j * 45, 10 + i * 45);
+                    maze[i][j].setPosition(xStart + j * cellSize, yStart + i * cellSize);
                     maze[i][j].setScale(2.9, 2.9);
                     break;
 
                 case 1:
                     maze[i][j].setTexture(Images[1].texture);
-                    maze[i][j].setPosition(480 + j * 45, 10 + i * 45);
+                    maze[i][j].setPosition(xStart + j * cellSize, yStart + i * cellSize);
                     break;
             
                 // setting initial pos for monsters
                 case 2:
-                    yStartPosition[2] = 10 + i *45;
-                    xStartPosition[2] = 480 + j *45;
+                    yStartPosition[2] = yStart + i * cellSize;
+                    xStartPosition[2] = xStart + j * cellSize;
                     break;
 
                 case 3:
-                    yStartPosition[3] = 10 + i * 45;
-                    xStartPosition[3] = 480 + j * 45;
+                    yStartPosition[3] = yStart + i * cellSize;
+                    xStartPosition[3] = xStart + j * cellSize;
                     break;
 
                 case 4:
-                    yStartPosition[4] = 10 + i * 45;
-                    xStartPosition[4] = 480 + j * 45;
+                    yStartPosition[4] = yStart + i * cellSize;
+                    xStartPosition[4] = xStart + j * cellSize;
                     break;
 
                 case 5:
-                    yStartPosition[5] = 10 + i * 45;
-                    xStartPosition[5] = 480 + j * 45;
+                    yStartPosition[5] = yStart + i * cellSize;
+                    xStartPosition[5] = xStart + j * cellSize;
                     break;
 
                 // setting initial pos for pacMan
                 case 6:
-                    yStartPosition[6] = 10 + i * 45;
-                    xStartPosition[6] = 480 + j * 45;
+                    yStartPosition[6] = yStart + i * cellSize;
+                    xStartPosition[6] = xStart + j * cellSize;
             default:
                 break;
             }
-        
         }
     }
-
 }
 
+//pacMan
 void pacManDrawing() {
     Images[6].texture.loadFromFile("Textures/pacmansprite.png");
 
@@ -126,9 +136,7 @@ void pacManDrawing() {
     Images[6].sprite.setTextureRect(IntRect(xPosition * 17, yPositon * 15, 17, 15));
     Images[6].sprite.setPosition(xStartPosition[6], yStartPosition[6]);
     Images[6].sprite.setScale(2.5, 2.5);
-
 }
-
 void movingPacman(Sprite& pacMan, int& x, int& y) {
     if (Keyboard::isKeyPressed(Keyboard::Left) && pacMan.getPosition().x > 0)
     {
@@ -137,7 +145,6 @@ void movingPacman(Sprite& pacMan, int& x, int& y) {
         x %= 3;
         y = 1;
         pacMan.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
-
     }
     else if (Keyboard::isKeyPressed(Keyboard::Right) && pacMan.getPosition().x < 1864)
     {
@@ -146,7 +153,6 @@ void movingPacman(Sprite& pacMan, int& x, int& y) {
         x %= 3;
         y = 0;
         pacMan.setTextureRect(IntRect(x * 16, y * 15, 16, 15));
-
     }
     else if (Keyboard::isKeyPressed(Keyboard::Up) && pacMan.getPosition().y > 0)
     {
@@ -155,7 +161,6 @@ void movingPacman(Sprite& pacMan, int& x, int& y) {
         x %= 3;
         y = 2;
         pacMan.setTextureRect(IntRect(x * 15.5, y * 16, 15.5, 16));
-
     }
     else if (Keyboard::isKeyPressed(Keyboard::Down) && pacMan.getPosition().y < 1024)
     {
@@ -164,10 +169,10 @@ void movingPacman(Sprite& pacMan, int& x, int& y) {
         x %= 3;
         y = 3;
         pacMan.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
-
     }
 }
 
+//ghosts
 void ghostsDrawing() {
     
     Images[2].texture.loadFromFile("Textures/redGhost.png");
@@ -182,12 +187,46 @@ void ghostsDrawing() {
         Images[i].sprite.setTextureRect(IntRect(xPosition * 16, yPositon * 16, 16, 16));
         Images[i].sprite.setScale(2.5, 2.5);
         Images[i].sprite.setPosition(xStartPosition[i], yStartPosition[i]);
-
     }
 }
 
+RectangleShape updateTarget(int ghostId) {
+    float xRightCorner = xStart + mazeWidth - cellSize;
+    float yRightCorner = yStart + mazeHeight - cellSize;
+    
+    RectangleShape circle(Vector2f(15, 15));
+    circle.setScale(2.8, 2.8);
+    
+    switch (ghostId)
+    {
+    case 2:
+        target = { xRightCorner, yStart };
+        circle.setFillColor(Color::Yellow);
+        circle.setPosition(target.x, target.y);
+        break;
+    case 3:
+        target = { xStart,yStart };
+        circle.setFillColor(Color::Blue);
+        circle.setPosition(target.x, target.y);
+        break;
+    case 4:
+        target = { xRightCorner,yRightCorner };
+        circle.setFillColor(Color::Red);
+        circle.setPosition(target.x, target.y);
+        break;
+    case 5:
+        target = { xStart,yRightCorner };
+        circle.setFillColor(Color::Magenta);
+        circle.setPosition(target.x, target.y);
+        break;
+    }
+    return circle;
+}
+
+// collisions FN
 void wallCollision(Sprite& body , Sprite maze[rows][columns]) {
     FloatRect playerBoundes = body.getGlobalBounds();
+    
     for (int i = 0; i < rows; i++)
     { 
         for (int j = 0; j < columns; j++) {
@@ -219,13 +258,11 @@ void wallCollision(Sprite& body , Sprite maze[rows][columns]) {
                                                                 maze[i][j].getGlobalBounds().width, 1.0f))) {
                     body.move(0, pacManSpeed);
                 }
-
             }
         }
     }
-    }
-
-int coinCollision(Sprite maze[rows][columns]) {
+}
+void coinCollision(Sprite maze[rows][columns]) {
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
             if (Images[6].sprite.getGlobalBounds().intersects(maze[i][j].getGlobalBounds())) {
@@ -236,7 +273,6 @@ int coinCollision(Sprite maze[rows][columns]) {
             }
         }
     }
-    return score;
 }
 
 void scoreDraw(RenderWindow& window) {
@@ -246,21 +282,20 @@ void scoreDraw(RenderWindow& window) {
 
     Text scoreText;
     scoreText.setFont(font);
-    scoreText.setCharacterSize(50);
+    scoreText.setCharacterSize(45);
     scoreText.setFillColor(Color::Yellow);
-    scoreText.setPosition(120, 50);
+    scoreText.setPosition(xStart + mazeWidth, 30);
     scoreText.setString(scoredisplay);
 
     window.draw(scoreText);
 }
-
 void timerDraw(RenderWindow& window  , Clock clock) {
     font.loadFromFile("Fonts/actionj.ttf");
     Text timeText;
 
     timeText.setFont(font);
     timeText.setCharacterSize(45);
-    timeText.setPosition(1500, 25);
+    timeText.setPosition(xStart - 200, 30);;
 
     Time passed;
     passed += clock.restart();
@@ -279,7 +314,7 @@ void timerDraw(RenderWindow& window  , Clock clock) {
 int main()
 {
     // Create the window
-    RenderWindow window(VideoMode(1920, 1080), "Pac-Man");
+    RenderWindow window(VideoMode(modeWidth, modeHeight), "Pac-Man");
     
     Sprite maze[rows][columns];
     Clock clock;
@@ -287,7 +322,7 @@ int main()
     drawMaze(maze);
     pacManDrawing();
     ghostsDrawing();
-    
+  
     // Main loop
     while (window.isOpen())
     {
@@ -321,6 +356,10 @@ int main()
 
         timerDraw(window, clock);
         scoreDraw(window);
+        for (int i = 2; i < 6; i++)
+        {
+            window.draw(updateTarget(i));
+        }
         
         window.display();
    
