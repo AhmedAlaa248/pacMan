@@ -1,31 +1,30 @@
 ﻿  Source.cpp
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(11,30): warning C4305: 'initializing': truncation from 'double' to 'float'
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(91,49): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(101,48): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(102,48): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(106,48): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(107,48): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(111,48): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(112,48): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(116,48): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(117,48): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(122,48): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(123,48): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(137,69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(137,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(163,57): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(97,45): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(107,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(108,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(112,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(113,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(117,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(118,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(122,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(123,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(128,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(129,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(143,69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(143,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(169,57): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=int
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(163,41): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(169,41): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=int
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(189,73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(189,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(198,29): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(303,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(304,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-  pacMan.vcxproj -> D:\FCIS ASU\Projects\pacMan\pacMan\x64\Debug\pacMan.exe
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(195,73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(195,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(241,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(346,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\Source.cpp(347,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  pacMan.vcxproj -> C:\Users\Ahmed\Documents\GitHub\pacMan\pacMan\x64\Debug\pacMan.exe
