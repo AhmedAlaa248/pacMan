@@ -422,6 +422,7 @@ void timerDraw(RenderWindow& window, Clock clock) {
 
     timeText.setFont(font);
     timeText.setCharacterSize(45);
+    timeText.setFillColor(Color::Yellow);
     timeText.setPosition(xStart - 200, 30);;
 
     Time passed;
