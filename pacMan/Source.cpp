@@ -10,8 +10,11 @@ const int columns = 21;
 const float cellSize = 45;
 const float ghostspeed = 1;
 const float pacManSpeed = 1;
-const float mazeWidth = (columns + 1) * cellSize;
 const float mazeHeight = (rows)*cellSize;
+const float mazeWidth = (columns + 1) * cellSize;
+
+
+//enum ghostDir {LEFT = 0, RIGHT , UP , DOWN };
 
 struct images
 {
@@ -19,17 +22,18 @@ struct images
     Sprite sprite;
 };
 
-struct Position
+/*struct Position
 {
     float x;
     float y;
 
-    bool operator==(const Position& position)
+   bool operator==(const Position& position)
     {
         return x == position.x && y == position.y;
     }
 };
-Position position, target;
+Position target;
+*/
 
 // 0 wall
    // 1 coin
@@ -51,8 +55,8 @@ int board[rows][columns] = {
       {0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0},//6
       {0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0},//7
       {0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0},//8
-      {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},//9
-      {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 2, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//10
+      {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 2, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},//9
+      {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 9, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//10
       {1, 1, 1, 1, 1, 1, 1, 1, 0, 4, 5, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1},//11
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//12
       {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 6, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},//13
@@ -67,19 +71,24 @@ int board[rows][columns] = {
       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},//22
 };
 
+bool collisioned = false; 
 int xPosition = 0;
 int yPositon = 0;
+int xDistance = 0; 
+int yDistance = 0;
 int xStartPosition[8];
 int yStartPosition[8];
 int modeWidth = 1920, modeHeight = 1080;
 float xStart = (modeWidth - mazeWidth) / 2;
 float yStart = (modeHeight - mazeHeight) / 2;
+Text mainMenuItems[5];
+
+//Vector2i position; 
 
 int score = 0;
-
 Font font;
 
-// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan 
+// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg
 images Images[8];
 
 void drawMaze(Sprite maze[rows][columns]) {
@@ -129,6 +138,65 @@ void drawMaze(Sprite maze[rows][columns]) {
                 xStartPosition[6] = xStart + j * cellSize;
             default:
                 break;
+            }
+        }
+    }
+}
+
+// collisions FN
+void wallCollision(Sprite& body, Sprite maze[rows][columns], bool isGhost) {
+    FloatRect playerBoundes = body.getGlobalBounds();
+    
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; j++) {
+            if (board[i][j] == 0) {
+                FloatRect wallBoundes = maze[i][j].getGlobalBounds();
+                //check collision from right of the wall
+                if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x + wallBoundes.width,
+                    maze[i][j].getPosition().y,
+                    1.0f, wallBoundes.height))) {
+                    body.move(pacManSpeed, 0);
+                    if (isGhost)
+                        collisioned = true;
+                }
+
+                //check collision from left of the wall
+                if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                    maze[i][j].getPosition().y,
+                    1.0f, maze[i][j].getGlobalBounds().height))) {
+                    body.move(-pacManSpeed, 0);
+                }
+
+                //check collision from top of the wall
+                if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                    maze[i][j].getPosition().y,
+                    wallBoundes.width, 1.0f))) {
+                    body.move(0, -pacManSpeed);
+                    if (isGhost)
+                        collisioned = true;
+                }
+
+                //check collision from bottom of the wall
+                if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                    maze[i][j].getPosition().y + wallBoundes.height,
+                    wallBoundes.width, 1.0f))) {
+                    body.move(0, pacManSpeed);
+                    if (isGhost)
+                        collisioned = true;
+                }
+            }
+        }
+    }
+}
+void coinCollision(Sprite maze[rows][columns]) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            if (Images[6].sprite.getGlobalBounds().intersects(maze[i][j].getGlobalBounds())) {
+                if (board[i][j] == 1) {
+                    maze[i][j].setPosition(2000000, 2000000);
+                    score++;
+                }
             }
         }
     }
@@ -195,8 +263,80 @@ void ghostsDrawing() {
         Images[i].sprite.setPosition(xStartPosition[i], yStartPosition[i]);
     }
 }
-/*
-distance between ghost and target
+
+void ghostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
+    
+    wallCollision(ghost, maze, true);
+
+    //ghost.move(1, 0);
+    if (collisioned)
+    {
+    int direction = rand() % 4;
+        switch (direction)
+        {
+        case 0:
+            xDistance = 0;
+            yDistance = 1;
+            break;
+        case 1:
+            xDistance = 0;
+            yDistance = -1;
+            break;
+        case 2:
+            xDistance = 1;
+            yDistance = 0;
+            break;
+        case 3:
+            xDistance = -1;
+            yDistance = 0;
+            break;
+        default:
+            break;
+        }
+    }
+    ghost.move(xDistance, yDistance);
+ //   cout << xDistance << "\t" << yDistance<< '\n';
+}
+
+//A* declarartion 
+/*//distance between ghost and target
+
+RectangleShape updateTarget(int ghostId , int ghostMode) {
+    float xRightCorner = xStart + mazeWidth - cellSize;
+    float yRightCorner = yStart + mazeHeight - cellSize;
+
+    RectangleShape circle(Vector2f(15, 15));
+    circle.setScale(2.8, 2.8);
+    switch (ghostMode)
+    {
+    case 0: // scatter Mode
+        switch (ghostId)
+        {
+        case 2:
+            target = { xRightCorner, yStart };
+            circle.setFillColor(Color::Red);
+            circle.setPosition(target.x, target.y);
+            break;
+        case 3:
+            target = { xStart - cellSize,yStart };
+            circle.setFillColor(Color::Magenta);
+            circle.setPosition(target.x, target.y);
+            break;
+        case 4:
+            target = { xRightCorner,yRightCorner };
+            circle.setFillColor(Color::Cyan);
+            circle.setPosition(target.x, target.y);
+            break;
+        case 5:
+            target = { xStart - cellSize,yRightCorner };
+            circle.setFillColor(Color(250, 165, 0));
+            circle.setPosition(target.x, target.y);
+            break;
+        }
+    }
+    return circle;
+}
+
 float target_distance(char direction)
 {
     float x = position.x;
@@ -230,93 +370,37 @@ float target_distance(char direction)
 
     return static_cast<float>(sqrt(pow(x - target.x, 2) + pow(y - target.y, 2)));
 }
-*/
 
+void updateShortestDistance() {
 
-RectangleShape updateTarget(int ghostId) {
-    float xRightCorner = xStart + mazeWidth - cellSize;
-    float yRightCorner = yStart + mazeHeight - cellSize;
+}
 
-    RectangleShape circle(Vector2f(15, 15));
-    circle.setScale(2.8, 2.8);
-
-    switch (ghostId)
+void updateMovement(Sprite& ghost, Sprite maze[rows][columns] , int ghostDirection ) {
+    ghost.move(position.x * pacManSpeed, position.y * pacManSpeed);
+    switch (ghostDirection)
     {
+    case 0:
+        position.x = -1;
+        position.y = 0;
+        break;
+    case 1:
+        position.x = 1;
+        position.y = 0;
+        break;
     case 2:
-        target = { xRightCorner, yStart };
-        circle.setFillColor(Color::Red);
-        circle.setPosition(target.x, target.y);
+        position.x = 0;
+        position.y = -1;
         break;
     case 3:
-        target = { xStart - cellSize,yStart };
-        circle.setFillColor(Color::Magenta);
-        circle.setPosition(target.x, target.y);
-        break;
-    case 4:
-        target = { xRightCorner,yRightCorner };
-        circle.setFillColor(Color::Cyan);
-        circle.setPosition(target.x, target.y);
-        break;
-    case 5:
-        target = { xStart - cellSize,yRightCorner };
-        circle.setFillColor(Color(250, 165, 0));
-        circle.setPosition(target.x, target.y);
+        position.x = 0;
+        position.y = 1;
         break;
     }
-    return circle;
+
+    wallCollision(ghost, maze);
 }
 
-// collisions FN
-void wallCollision(Sprite& body, Sprite maze[rows][columns]) {
-    FloatRect playerBoundes = body.getGlobalBounds();
-
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < columns; j++) {
-            if (board[i][j] == 0) {
-                //check collision from left of the wall
-                if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
-                    maze[i][j].getPosition().y,
-                    1.0f, maze[i][j].getGlobalBounds().height))) {
-                    body.move(-pacManSpeed, 0);
-                }
-
-                //check collision from right of the wall
-                if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x + maze[i][j].getGlobalBounds().width,
-                    maze[i][j].getPosition().y,
-                    1.0f, maze[i][j].getGlobalBounds().height))) {
-                    body.move(pacManSpeed, 0);
-                }
-
-                //check collision from top of the wall
-                if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
-                    maze[i][j].getPosition().y,
-                    maze[i][j].getGlobalBounds().width, 1.0f))) {
-                    body.move(0, -pacManSpeed);
-                }
-
-                //check collision from bottom of the wall
-                if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
-                    maze[i][j].getPosition().y + maze[i][j].getGlobalBounds().height,
-                    maze[i][j].getGlobalBounds().width, 1.0f))) {
-                    body.move(0, pacManSpeed);
-                }
-            }
-        }
-    }
-}
-void coinCollision(Sprite maze[rows][columns]) {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
-            if (Images[6].sprite.getGlobalBounds().intersects(maze[i][j].getGlobalBounds())) {
-                if (board[i][j] == 1) {
-                    maze[i][j].setPosition(2000000, 2000000);
-                    score++;
-                }
-            }
-        }
-    }
-}
+*/
 
 void scoreDraw(RenderWindow& window) {
     String scoredisplay = "SCORE: " + to_string(score);
@@ -354,6 +438,66 @@ void timerDraw(RenderWindow& window, Clock clock) {
     window.draw(timeText);
 }
 
+//Main Menu
+void mainMenuDrawing(RenderWindow& window) {
+    Images[7].texture.loadFromFile("Textures/pcManBg.png");
+    Images[7].sprite.setTexture(Images[7].texture);
+    
+    font.loadFromFile("Fonts/almosnow.ttf");
+
+    mainMenuItems[0].setString("New game");
+    mainMenuItems[1].setString("Best Scores");
+    mainMenuItems[2].setString("Settings");
+    mainMenuItems[3].setString("Devlopers");
+    mainMenuItems[4].setString("Exit");
+    
+    window.draw(Images[7].sprite);
+    for (int i = 0; i < 5; i++) {
+        mainMenuItems[i].setFont(font);
+        mainMenuItems[i].setCharacterSize(75);
+        mainMenuItems[i].setPosition(100, 290 + i * 100);
+        window.draw(mainMenuItems[i]);
+    }
+}
+int SelectedItem() {
+    Mouse mouse;
+    for (int i = 0; i < 5; i++)
+    {
+        mainMenuItems[i].setFillColor(Color::White);
+        if (mainMenuItems[i].getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+        {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                mainMenuItems[i].setFillColor(Color::Blue);
+                return i;
+            }
+            else
+                mainMenuItems[i].setFillColor(Color::Yellow);
+        }
+    }
+}
+void newGameItem(RenderWindow& window , Sprite maze[rows][columns] , Clock clock) {
+    movingPacman(Images[6].sprite, xPosition, yPositon);
+    wallCollision(Images[6].sprite, maze, false);
+    ghostMovement(Images[2].sprite, maze);
+    coinCollision(maze);
+
+    //Drawing sprites
+    for (int i = 2; i < 7; i++) {
+        window.draw(Images[i].sprite);
+    }
+
+    // Draw the maze
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            window.draw(maze[i][j]);
+        }
+    }
+
+    timerDraw(window, clock);
+    scoreDraw(window);
+}
+
 int main()
 {
     // Create the window
@@ -365,6 +509,9 @@ int main()
     drawMaze(maze);
     pacManDrawing();
     ghostsDrawing();
+    
+    int windowNum = 5;
+    xDistance = 1;
 
     // Main loop
     while (window.isOpen())
@@ -380,33 +527,31 @@ int main()
             }
         }
 
-        movingPacman(Images[6].sprite, xPosition, yPositon);
-        wallCollision(Images[6].sprite, maze);
-        coinCollision(maze);
-
-        //Drawing sprites
         window.clear(Color::Black);
-        for (int i = 2; i < 7; i++) {
-            window.draw(Images[i].sprite);
+
+        switch (windowNum)
+        {
+        case 0:
+            newGameItem(window, maze, clock);
+            break;
+        case 4:
+            window.close();
+            break;
+        case 5:
+            mainMenuDrawing(window);
+            windowNum = SelectedItem();
+            break;
+        default:
+            break;
         }
 
-        // Draw the maze
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                window.draw(maze[i][j]);
-            }
-        }
-
-        timerDraw(window, clock);
-        scoreDraw(window);
+/*
         for (int i = 2; i < 6; i++)
         {
-            window.draw(updateTarget(i));
+            window.draw(updateTarget(i , 0));
         }
-
+*/
         window.display();
-
-
     }
     return 0;
 }
