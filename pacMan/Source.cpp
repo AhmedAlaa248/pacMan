@@ -78,10 +78,13 @@ int xDistance = 0;
 int yDistance = 0;
 int xStartPosition[8];
 int yStartPosition[8];
+int lastDirection = 5;
 int modeWidth = 1920, modeHeight = 1080;
 float xStart = (modeWidth - mazeWidth) / 2;
 float yStart = (modeHeight - mazeHeight) / 2;
 Text mainMenuItems[5];
+
+char x;
 
 //Vector2i position; 
 
@@ -159,6 +162,7 @@ void wallCollision(Sprite& body, Sprite maze[rows][columns], bool isGhost) {
                     body.move(pacManSpeed, 0);
                     if (isGhost)
                         collisioned = true;
+                    x = 'R';
                 }
 
                 //check collision from left of the wall
@@ -166,6 +170,9 @@ void wallCollision(Sprite& body, Sprite maze[rows][columns], bool isGhost) {
                     maze[i][j].getPosition().y,
                     1.0f, maze[i][j].getGlobalBounds().height))) {
                     body.move(-pacManSpeed, 0);
+                    if (isGhost)
+                        collisioned = true;
+                    x = 'R';
                 }
 
                 //check collision from top of the wall
@@ -175,6 +182,7 @@ void wallCollision(Sprite& body, Sprite maze[rows][columns], bool isGhost) {
                     body.move(0, -pacManSpeed);
                     if (isGhost)
                         collisioned = true;
+                    x = 'T';
                 }
 
                 //check collision from bottom of the wall
@@ -184,6 +192,7 @@ void wallCollision(Sprite& body, Sprite maze[rows][columns], bool isGhost) {
                     body.move(0, pacManSpeed);
                     if (isGhost)
                         collisioned = true;
+                    x = 'D';
                 }
             }
         }
@@ -263,36 +272,39 @@ void ghostsDrawing() {
         Images[i].sprite.setPosition(xStartPosition[i], yStartPosition[i]);
     }
 }
-
 void ghostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
-    
     wallCollision(ghost, maze, true);
 
     //ghost.move(1, 0);
     if (collisioned)
     {
     int direction = rand() % 4;
-        switch (direction)
-        {
-        case 0:
-            xDistance = 0;
-            yDistance = 1;
-            break;
-        case 1:
-            xDistance = 0;
-            yDistance = -1;
-            break;
-        case 2:
-            xDistance = 1;
-            yDistance = 0;
-            break;
-        case 3:
-            xDistance = -1;
-            yDistance = 0;
-            break;
-        default:
-            break;
-        }
+    if (direction == lastDirection)
+        direction = rand() % 4;
+
+    switch (direction)
+    {
+    case 0: //Up
+        xDistance = 0;
+        yDistance = 1;
+        break;
+    case 1: //Down
+        xDistance = 0;
+        yDistance = -1;
+        break;
+    case 2: //Right
+        xDistance = 1;
+        yDistance = 0;
+        break;
+    case 3: //Left
+        xDistance = -1;
+        yDistance = 0;
+        break;
+    default:
+        break;
+    }
+        cout << x << '\n';
+        lastDirection = direction;
     }
     ghost.move(xDistance, yDistance);
  //   cout << xDistance << "\t" << yDistance<< '\n';
@@ -439,65 +451,110 @@ void timerDraw(RenderWindow& window, Clock clock) {
     window.draw(timeText);
 }
 
-//Main Menu
-void mainMenuDrawing(RenderWindow& window) {
-    Images[7].texture.loadFromFile("Textures/pcManBg.png");
-    Images[7].sprite.setTexture(Images[7].texture);
-    
-    font.loadFromFile("Fonts/almosnow.ttf");
+struct Mainmenu
+{
+    void drawing(RenderWindow& window) {
+        Images[7].texture.loadFromFile("Textures/pcManBg.png");
+        Images[7].sprite.setTexture(Images[7].texture);
 
-    mainMenuItems[0].setString("New game");
-    mainMenuItems[1].setString("Best Scores");
-    mainMenuItems[2].setString("Settings");
-    mainMenuItems[3].setString("Devlopers");
-    mainMenuItems[4].setString("Exit");
-    
-    window.draw(Images[7].sprite);
-    for (int i = 0; i < 5; i++) {
-        mainMenuItems[i].setFont(font);
-        mainMenuItems[i].setCharacterSize(75);
-        mainMenuItems[i].setPosition(100, 290 + i * 100);
-        window.draw(mainMenuItems[i]);
+        font.loadFromFile("Fonts/almosnow.ttf");
+
+        mainMenuItems[0].setString("New game");
+        mainMenuItems[1].setString("Best Scores");
+        mainMenuItems[2].setString("Settings");
+        mainMenuItems[3].setString("Devlopers");
+        mainMenuItems[4].setString("Exit");
+
+        window.draw(Images[7].sprite);
+        for (int i = 0; i < 5; i++) {
+            mainMenuItems[i].setFont(font);
+            mainMenuItems[i].setCharacterSize(75);
+            mainMenuItems[i].setPosition(100, 290 + i * 100);
+            window.draw(mainMenuItems[i]);
+        }
     }
-}
-int SelectedItem() {
-    Mouse mouse;
-    for (int i = 0; i < 5; i++)
-    {
-        mainMenuItems[i].setFillColor(Color::White);
-        if (mainMenuItems[i].getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+    int SelectedItem() {
+        Mouse mouse;
+        Keyboard keyboard;
+        Event event;
+        for (int i = 0; i < 5; i++)
         {
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            mainMenuItems[i].setFillColor(Color::White);
+            if (mainMenuItems[i].getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
             {
-                mainMenuItems[i].setFillColor(Color::Blue);
-                return i;
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                {
+                    mainMenuItems[i].setFillColor(Color::Blue);
+                    return i;
+                }
+                else
+                    mainMenuItems[i].setFillColor(Color::Yellow);
             }
-            else
-                mainMenuItems[i].setFillColor(Color::Yellow);
         }
     }
-}
-void newGameItem(RenderWindow& window , Sprite maze[rows][columns] , Clock clock) {
-    movingPacman(Images[6].sprite, xPosition, yPositon);
-    wallCollision(Images[6].sprite, maze, false);
-    ghostMovement(Images[2].sprite, maze);
-    coinCollision(maze);
-
-    //Drawing sprites
-    for (int i = 2; i < 7; i++) {
-        window.draw(Images[i].sprite);
-    }
-
-    // Draw the maze
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
-            window.draw(maze[i][j]);
+    void moveRandomly(Text text, RenderWindow& window) {
+        
+        text.move(xDistance , yDistance);
+        //cout << xDistance;
+        if (text.getPosition().x < 0 || text.getPosition().x > window.getSize().x - text.getGlobalBounds().width) {
+             xDistance = -xDistance;
+            
         }
-    }
-
-    timerDraw(window, clock);
-    scoreDraw(window);
+         if (text.getPosition().y < 0 || text.getPosition().y > window.getSize().y - text.getGlobalBounds().height)
+        {
+             xDistance = -yDistance;
+        }
+         
 }
+    void newGameItem(RenderWindow& window, Sprite maze[rows][columns], Clock clock) {
+        movingPacman(Images[6].sprite, xPosition, yPositon);
+        wallCollision(Images[6].sprite, maze, false);
+        ghostMovement(Images[2].sprite, maze);
+        coinCollision(maze);
+
+        //Drawing sprites
+        for (int i = 2; i < 7; i++) {
+            window.draw(Images[i].sprite);
+        }
+
+        // Draw the maze
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                window.draw(maze[i][j]);
+            }
+        }
+
+        timerDraw(window, clock);
+        scoreDraw(window);
+    }
+    void developersItem(RenderWindow& window) {
+        font.loadFromFile("Fonts/actionj.ttf");
+        
+        Text ourNames , FCIS;
+        String names;
+        names = "Ahmed Alaa\n \nAhmed Essam\n \nAhmed Mahmoud\n \nAbdallah Yasser\n \nAbelrahman Maamon\n \nOmar Ali\n \nSalah Eldein Tarek\n \nZiad Saeed";
+        
+        ourNames.setFont(font);
+        ourNames.setString(names);
+        ourNames.setCharacterSize(40);
+        ourNames.Bold;
+        ourNames.setFillColor(Color::Red);
+        ourNames.setPosition((window.getSize().x / 2) - (ourNames.getGlobalBounds().width / 2), (window.getSize().y / 2) - (ourNames.getGlobalBounds().height / 2));
+        
+        FCIS.setFont(font);
+        FCIS.setString("FCIS 26");
+        FCIS.setCharacterSize(75);
+        FCIS.setFillColor(Color::Magenta);
+        FCIS.setPosition(35, 20);
+
+
+        moveRandomly(ourNames, window);
+
+        window.draw(FCIS);
+        window.draw(ourNames);
+} 
+
+};
 
 int main()
 {
@@ -506,13 +563,18 @@ int main()
 
     Sprite maze[rows][columns];
     Clock clock;
+    Text text;
 
+    Mainmenu mainMenu; 
     drawMaze(maze);
     pacManDrawing();
     ghostsDrawing();
     
+    xDistance = rand() % 5-2;
+    yDistance = rand() % 5-2;
+
     int windowNum = 5;
-    xDistance = 1;
+    //xDistance = 1;
 
     // Main loop
     while (window.isOpen())
@@ -533,19 +595,21 @@ int main()
         switch (windowNum)
         {
         case 0:
-            newGameItem(window, maze, clock);
+            mainMenu.newGameItem(window, maze, clock);
+            break;
+        case 3:
+            mainMenu.developersItem(window);
             break;
         case 4:
             window.close();
             break;
         case 5:
-            mainMenuDrawing(window);
-            windowNum = SelectedItem();
+            mainMenu.drawing(window);
+            windowNum = mainMenu.SelectedItem();
             break;
-        default:
-            break;
+        
         }
-
+ 
 /*
         for (int i = 2; i < 6; i++)
         {
