@@ -7,11 +7,11 @@ using namespace std;
 
 const int rows = 23;
 const int columns = 21;
-const float cellSize = 45;
+const float cellSize = 47;
 const float ghostspeed = 1;
 const float pacManSpeed = 1;
 const float mazeHeight = (rows)*cellSize;
-const float mazeWidth = (columns + 1) * cellSize;
+const float mazeWidth = (columns) * cellSize;
 
 
 //enum ghostDir {LEFT = 0, RIGHT , UP , DOWN };
@@ -71,7 +71,6 @@ int board[rows][columns] = {
       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},//22
 };
 
-bool collisioned = false; 
 int xPosition = 0;
 int yPositon = 0;
 int xDistance = 0; 
@@ -147,7 +146,7 @@ void drawMaze(Sprite maze[rows][columns]) {
 }
 
 // collisions FN
-void wallCollision(Sprite& body, Sprite maze[rows][columns], bool isGhost) {
+void wallCollision(Sprite& body, Sprite maze[rows][columns]) {
     FloatRect playerBoundes = body.getGlobalBounds();
     
     for (int i = 0; i < rows; i++)
@@ -160,40 +159,28 @@ void wallCollision(Sprite& body, Sprite maze[rows][columns], bool isGhost) {
                     maze[i][j].getPosition().y,
                     1.0f, wallBoundes.height))) {
                     body.move(pacManSpeed, 0);
-                    if (isGhost)
-                        collisioned = true;
-                    x = 'R';
-                }
+                    }
 
                 //check collision from left of the wall
                 if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
                     maze[i][j].getPosition().y,
                     1.0f, maze[i][j].getGlobalBounds().height))) {
                     body.move(-pacManSpeed, 0);
-                    if (isGhost)
-                        collisioned = true;
-                    x = 'R';
-                }
+                    }
 
                 //check collision from top of the wall
                 if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
                     maze[i][j].getPosition().y,
                     wallBoundes.width, 1.0f))) {
                     body.move(0, -pacManSpeed);
-                    if (isGhost)
-                        collisioned = true;
-                    x = 'T';
-                }
+                    }
 
                 //check collision from bottom of the wall
                 if (playerBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
                     maze[i][j].getPosition().y + wallBoundes.height,
                     wallBoundes.width, 1.0f))) {
                     body.move(0, pacManSpeed);
-                    if (isGhost)
-                        collisioned = true;
-                    x = 'D';
-                }
+                    }
             }
         }
     }
@@ -273,41 +260,46 @@ void ghostsDrawing() {
     }
 }
 void ghostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
-    wallCollision(ghost, maze, true);
 
-    //ghost.move(1, 0);
-    if (collisioned)
-    {
-    int direction = rand() % 4;
-    if (direction == lastDirection)
-        direction = rand() % 4;
+    //TODO Edit it to change it direction up and down
+    //TODO intRect for Animations
 
-    switch (direction)
+    if (xDistance != 0)
+        ghost.move(xDistance, 0);
+    else if (yDistance != 0)
+        ghost.move(0, yDistance);
+
+    FloatRect ghostBoundes = ghost.getGlobalBounds();
+
+    //walls collision
+    for (int i = 0; i < rows; i++)
     {
-    case 0: //Up
-        xDistance = 0;
-        yDistance = 1;
-        break;
-    case 1: //Down
-        xDistance = 0;
-        yDistance = -1;
-        break;
-    case 2: //Right
-        xDistance = 1;
-        yDistance = 0;
-        break;
-    case 3: //Left
-        xDistance = -1;
-        yDistance = 0;
-        break;
-    default:
-        break;
+        for (int j = 0; j < columns; j++) {
+            if (board[i][j] == 0) {
+                FloatRect wallBoundes = maze[i][j].getGlobalBounds();
+
+                if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                    maze[i][j].getPosition().y,
+                    1.0f, maze[i][j].getGlobalBounds().height)) || 
+                    ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x + wallBoundes.width,
+                        maze[i][j].getPosition().y,
+                        1.0f, maze[i][j].getGlobalBounds().height)))
+                {
+                    xDistance = -xDistance;
+                }
+
+                if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                    maze[i][j].getPosition().y,
+                    wallBoundes.width, 1.0f)) || 
+                    ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                        maze[i][j].getPosition().y + wallBoundes.height,
+                        wallBoundes.width, 1.0f))) {
+                    yDistance = -yDistance;
+                }
+                 
+            }
+        }
     }
-        cout << x << '\n';
-        lastDirection = direction;
-    }
-    ghost.move(xDistance, yDistance);
- //   cout << xDistance << "\t" << yDistance<< '\n';
 }
 
 //A* declarartion 
@@ -423,7 +415,7 @@ void scoreDraw(RenderWindow& window) {
     scoreText.setFont(font);
     scoreText.setCharacterSize(45);
     scoreText.setFillColor(Color::Yellow);
-    scoreText.setPosition(xStart + mazeWidth, 30);
+    scoreText.setPosition(xStart + mazeWidth + 85, 30);
     scoreText.setString(scoredisplay);
 
     window.draw(scoreText);
@@ -508,20 +500,20 @@ struct Mainmenu
 }
     void newGameItem(RenderWindow& window, Sprite maze[rows][columns], Clock clock) {
         movingPacman(Images[6].sprite, xPosition, yPositon);
-        wallCollision(Images[6].sprite, maze, false);
+        wallCollision(Images[6].sprite, maze);
         ghostMovement(Images[2].sprite, maze);
         coinCollision(maze);
-
-        //Drawing sprites
-        for (int i = 2; i < 7; i++) {
-            window.draw(Images[i].sprite);
-        }
 
         // Draw the maze
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 window.draw(maze[i][j]);
             }
+        }
+
+        //Drawing sprites
+        for (int i = 2; i < 7; i++) {
+            window.draw(Images[i].sprite);
         }
 
         timerDraw(window, clock);
@@ -570,12 +562,11 @@ int main()
     pacManDrawing();
     ghostsDrawing();
     
-    xDistance = rand() % 5-2;
-    yDistance = rand() % 5-2;
+    xDistance = rand() % 5 - 2;
+    yDistance = rand() % 5 - 2;
 
     int windowNum = 5;
-    //xDistance = 1;
-
+    
     // Main loop
     while (window.isOpen())
     {
