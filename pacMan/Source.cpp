@@ -82,6 +82,8 @@ int modeWidth = 1920, modeHeight = 1080;
 float xStart = (modeWidth - mazeWidth) / 2;
 float yStart = (modeHeight - mazeHeight) / 2;
 Text mainMenuItems[5];
+bool moveVertical = false;
+bool moveHorizontal = false;
 
 char x;
 
@@ -197,6 +199,49 @@ void coinCollision(Sprite maze[rows][columns]) {
         }
     }
 }
+void ghostCollisionWithWalls(Sprite ghost,Sprite maze[rows][columns]) {
+    FloatRect ghostBoundes = ghost.getGlobalBounds();
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; j++) {
+            if (board[i][j] == 0) {
+                FloatRect wallBoundes = maze[i][j].getGlobalBounds();
+
+                if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                    maze[i][j].getPosition().y,
+                    1.0f, maze[i][j].getGlobalBounds().height)) ||
+                    ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x + wallBoundes.width,
+                        maze[i][j].getPosition().y,
+                        1.0f, maze[i][j].getGlobalBounds().height)))
+                {
+
+                    xDistance = -xDistance;
+                    moveVertical = true;
+                }
+
+                if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                    maze[i][j].getPosition().y,
+                    wallBoundes.width, 1.0f)) ||
+                    ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                        maze[i][j].getPosition().y + wallBoundes.height,
+                        wallBoundes.width, 1.0f))) {
+                    yDistance = -yDistance;
+                    moveHorizontal = true;
+                }
+
+            }
+        }
+    }
+}
+//TODO TYPE IT THEN CALL IT 
+void ghostCollisionWithPacMan(Sprite ghost) {
+    if (ghost.getGlobalBounds().intersects(Images[6].sprite.getGlobalBounds()))
+    {
+        
+    }
+}
+
 
 //pacMan
 void pacManDrawing() {
@@ -261,46 +306,29 @@ void ghostsDrawing() {
 }
 void ghostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
 
-    //TODO Edit it to change it direction up and down
     //TODO intRect for Animations
 
-    if (xDistance != 0)
+    if (moveHorizontal)
+    {
+        ghost.move(xDistance, 0);
+        moveHorizontal = 0;
+    }else if(moveVertical)
+    {
+        ghost.move(0, 1);
+        moveVertical = 0;
+    }
+    else 
+        ghost.move(xDistance, 0);
+
+    /*if (xDistance != 0)
         ghost.move(xDistance, 0);
     else if (yDistance != 0)
         ghost.move(0, yDistance);
-
-    FloatRect ghostBoundes = ghost.getGlobalBounds();
-
-    //walls collision
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < columns; j++) {
-            if (board[i][j] == 0) {
-                FloatRect wallBoundes = maze[i][j].getGlobalBounds();
-
-                if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
-                    maze[i][j].getPosition().y,
-                    1.0f, maze[i][j].getGlobalBounds().height)) || 
-                    ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x + wallBoundes.width,
-                        maze[i][j].getPosition().y,
-                        1.0f, maze[i][j].getGlobalBounds().height)))
-                {
-                    xDistance = -xDistance;
-                }
-
-                if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
-                    maze[i][j].getPosition().y,
-                    wallBoundes.width, 1.0f)) || 
-                    ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
-                        maze[i][j].getPosition().y + wallBoundes.height,
-                        wallBoundes.width, 1.0f))) {
-                    yDistance = -yDistance;
-                }
-                 
-            }
-        }
-    }
+*/
+    ghostCollisionWithWalls(ghost, maze);
+    
 }
+
 
 //A* declarartion 
 /*//distance between ghost and target
