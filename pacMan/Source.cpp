@@ -1,6 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
 
 using namespace sf;
 using namespace std;
@@ -57,7 +60,7 @@ int board[rows][columns] = {
       {0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0},//8
       {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 2, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},//9
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 9, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//10
-      {0, 1, 1, 1, 1, 1, 1, 1, 0, 4, 5, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1},//11
+      {7, 1, 1, 1, 1, 1, 1, 1, 0, 4, 5, 3, 0, 1, 1, 1, 1, 1, 1, 1, 7},//11
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//12
       {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 6, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},//13
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//14
@@ -94,12 +97,13 @@ char x;
 int score = 0;
 Font font;
 
-// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg
-images Images[8];
+// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black
+images Images[9];
 
 void drawMaze(Sprite maze[rows][columns]) {
     Images[0].texture.loadFromFile("Textures/Wall.png");
     Images[1].texture.loadFromFile("Textures/coin.png");
+    Images[8].texture.loadFromFile("Textures/black.png");
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
@@ -142,6 +146,12 @@ void drawMaze(Sprite maze[rows][columns]) {
             case 6:
                 yStartPosition[6] = yStart + i * cellSize;
                 xStartPosition[6] = xStart + j * cellSize;
+                break;
+            case 7:
+                maze[i][j].setTexture(Images[8].texture);
+                maze[i][j].setPosition(xStart + j * cellSize, yStart + i * cellSize);
+                maze[i][j].setScale(2.9, 2.9);
+                break;
             default:
                 break;
             }
@@ -293,6 +303,22 @@ void movingPacman(Sprite& pacMan, int& x, int& y) {
         x %= 3;
         y = 3;
         pacMan.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
+    }
+}
+void teleport(Sprite& body, Sprite maze[rows][columns]) {
+    FloatRect playerBoundes = body.getGlobalBounds();
+    FloatRect wallBoundesLeft = maze[11][0].getGlobalBounds();
+    FloatRect wallBoundesRight = maze[11][20].getGlobalBounds();
+
+    if (playerBoundes.intersects(FloatRect(maze[11][0].getPosition().x,
+        maze[11][0].getPosition().y,
+        1.0f, wallBoundesLeft.height))) {
+        body.setPosition(wallBoundesRight.left, wallBoundesRight.top);
+    }
+    if (playerBoundes.intersects(FloatRect(maze[11][20].getPosition().x + wallBoundesRight.width,
+        maze[11][20].getPosition().y,
+        1.0f, maze[11][20].getGlobalBounds().height))) {
+        body.setPosition(wallBoundesLeft.left + 10, wallBoundesLeft.top);
     }
 }
 
@@ -454,7 +480,7 @@ void scoreDraw(RenderWindow& window) {
     scoreText.setFillColor(Color::Yellow);
     scoreText.setPosition(xStart + mazeWidth + 85, 30);
     scoreText.setString(scoredisplay);
-
+        
     window.draw(scoreText);
 }
 void timerDraw(RenderWindow& window, Clock clock) {
@@ -537,6 +563,7 @@ struct Mainmenu
     void newGameItem(RenderWindow& window, Sprite maze[rows][columns], Clock clock) {
         movingPacman(Images[6].sprite, xPosition, yPositon);
         wallCollision(Images[6].sprite, maze);
+        teleport(Images[6].sprite, maze);
         ghostMovement(Images[2].sprite, maze);
         ghostCollisionWithPacMan(Images[2].sprite , window);
         coinCollision(maze);
@@ -670,6 +697,7 @@ struct Mainmenu
         }
         return enter_player_name;
     }
+   
 };
 
 int main()
