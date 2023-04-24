@@ -84,6 +84,7 @@ float yStart = (modeHeight - mazeHeight) / 2;
 Text mainMenuItems[5];
 bool moveVertical = false;
 bool moveHorizontal = false;
+bool nameentered = false;
 
 char x;
 
@@ -573,7 +574,56 @@ struct Mainmenu
         window.draw(FCIS);
         window.draw(ourNames);
 } 
+    void playername(RenderWindow& window) {
+        Font font;
+        font.loadFromFile("Fonts/actionj.ttf");
+        Text t1, t2;
+        string enter_player_name;
 
+        // cin >> enter_player_name;
+        if (enter_player_name.empty()) {
+            enter_player_name.clear();
+        }
+        t1.setFont(font);
+        t2.setFont(font);
+        t1.setCharacterSize(45);
+        t2.setCharacterSize(45);
+        t1.Bold;
+        t1.setFillColor(Color::Magenta);
+        t2.setFillColor(Color::Blue);
+        t1.setString("enter your name:");
+        t1.setPosition((window.getSize().x / 2) - (t1.getGlobalBounds().width / 2), (window.getSize().y / 2) - (t1.getGlobalBounds().height / 2));
+        t2.setPosition((window.getSize().x / 2) - (t1.getGlobalBounds().width / 2), (window.getSize().y / 2 + 30) - (t1.getGlobalBounds().height / 2));
+        while (window.isOpen()) {
+            Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == Event::Closed()) {
+                    window.close();
+                }
+                if (event.type == Event::TextEntered) {
+                    enter_player_name += static_cast<char>(event.text.unicode);//possible error
+                }
+                if (Keyboard::isKeyPressed(Keyboard::BackSpace) && enter_player_name.size() > 0) {
+                    enter_player_name.resize(enter_player_name.size() - 1);
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Enter) && enter_player_name.size() > 1) {
+                    nameentered = true;
+                    break;
+
+                }
+                if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+                    break;
+                }
+                t2.setString(enter_player_name);
+                window.clear();
+                window.draw(t1);
+                window.draw(t2);
+                window.display();
+            }
+            if (nameentered == true)
+                break;
+        }
+    }
 };
 
 int main()
@@ -614,6 +664,9 @@ int main()
         switch (windowNum)
         {
         case 0:
+            if (nameentered == false)
+                mainMenu.playername(window);
+            else
             mainMenu.newGameItem(window, maze, clock);
             break;
         case 3:

@@ -1,44 +1,35 @@
 ﻿  Source.cpp
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(110,45): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(120,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(121,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(125,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(126,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(130,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(131,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(135,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(136,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(141,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(142,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(254,69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(254,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(280,57): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(111,45): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(121,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(122,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(126,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(127,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(131,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(132,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(136,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(137,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(142,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(143,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(253,69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(253,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(279,57): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=int
           ]
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(280,41): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(279,41): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=int
           ]
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(306,73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(306,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(316,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(324,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(466,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(467,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(495,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(506,103): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-          and
-          [
-              T=float
-          ]
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(506,80): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(305,73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(305,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(314,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(322,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(464,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(465,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(493,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(504,103): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -47,9 +38,19 @@ C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(506,80): warning C4244: 'argu
           [
               T=float
           ]
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(502,15): warning C4101: 'event': unreferenced local variable
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(501,18): warning C4101: 'keyboard': unreferenced local variable
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(520,31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(520,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Ahmed Alaa\source\repos\pacMan\Source.cpp(517): warning C4715: 'Mainmenu::SelectedItem': not all control paths return a value
-  pacMan.vcxproj -> C:\Users\Ahmed Alaa\source\repos\pacMan\x64\Debug\pacMan.exe
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(504,80): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(500,15): warning C4101: 'event': unreferenced local variable
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(499,18): warning C4101: 'keyboard': unreferenced local variable
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(518,31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(518,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(600,42): warning C4353: nonstandard extension used: constant 0 as function expression.  Use '__noop' function intrinsic instead
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(515): warning C4715: 'Mainmenu::SelectedItem': not all control paths return a value
+  pacMan.vcxproj -> C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\x64\Debug\pacMan.exe
