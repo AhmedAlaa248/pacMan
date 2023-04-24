@@ -71,6 +71,7 @@ int board[rows][columns] = {
       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},//22
 };
 
+int windowNum;
 int xPosition = 0;
 int yPositon = 0;
 int xDistance = 0; 
@@ -84,7 +85,7 @@ float yStart = (modeHeight - mazeHeight) / 2;
 Text mainMenuItems[5];
 bool moveVertical = false;
 bool moveHorizontal = false;
-bool nameentered = false;
+bool nameEntered = false;
 
 char x;
 
@@ -505,7 +506,6 @@ struct Mainmenu
             {
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 {
-                    mainMenuItems[i].setFillColor(Color::Blue);
                     return i;
                 }
                 else
@@ -574,55 +574,93 @@ struct Mainmenu
         window.draw(FCIS);
         window.draw(ourNames);
 } 
-    void playername(RenderWindow& window) {
+    string playername(RenderWindow& window) {
+        Mouse mouse;
+        
         Font font;
-        font.loadFromFile("Fonts/actionj.ttf");
-        Text t1, t2;
+        font.loadFromFile("Fonts/Lightdot-13x6.ttf");
+        Text EnterName, Name ;
         string enter_player_name;
-
-        // cin >> enter_player_name;
-        if (enter_player_name.empty()) {
+        RectangleShape rectangle;
+        
+        rectangle.setFillColor(Color::Transparent);
+        rectangle.setOutlineThickness(7.f);
+        rectangle.setOutlineColor(Color::White);
+        
+        Text start("START", font, 50);
+        Text back("Back", font, 50);
+        start.setPosition((window.getSize().x / 3), (window.getSize().y / 5) * 4);
+        back.setPosition((window.getSize().x / 6) * 4 , (window.getSize().y / 5) * 4);
+        
+        if (enter_player_name.empty())
             enter_player_name.clear();
-        }
-        t1.setFont(font);
-        t2.setFont(font);
-        t1.setCharacterSize(45);
-        t2.setCharacterSize(45);
-        t1.Bold;
-        t1.setFillColor(Color::Magenta);
-        t2.setFillColor(Color::Blue);
-        t1.setString("enter your name:");
-        t1.setPosition((window.getSize().x / 2) - (t1.getGlobalBounds().width / 2), (window.getSize().y / 2) - (t1.getGlobalBounds().height / 2));
-        t2.setPosition((window.getSize().x / 2) - (t1.getGlobalBounds().width / 2), (window.getSize().y / 2 + 30) - (t1.getGlobalBounds().height / 2));
+        
+        EnterName.setFont(font);
+        EnterName.setCharacterSize(100);
+        EnterName.Bold;
+        EnterName.setFillColor(Color::Magenta);
+        EnterName.setString("Enter your name:");
+        EnterName.setPosition((window.getSize().x / 2) - (EnterName.getGlobalBounds().width / 2), (window.getSize().y / 3) - (EnterName.getGlobalBounds().height / 2));
+        
+        Name.setFont(font);
+        Name.setCharacterSize(55);
+        Name.setFillColor(Color::Blue);
+        Name.setPosition(30 + (window.getSize().x / 2) - (EnterName.getGlobalBounds().width / 2), (window.getSize().y / 2) - (EnterName.getGlobalBounds().height / 2));
+        
+        rectangle.setPosition(15 + (window.getSize().x / 2) - (EnterName.getGlobalBounds().width / 2), -2.5 + (window.getSize().y / 2) - (EnterName.getGlobalBounds().height / 2));
+        rectangle.setSize(Vector2f(EnterName.getGlobalBounds().width - 30, 60.0));
+        
         while (window.isOpen()) {
             Event event;
-            while (window.pollEvent(event)) {
+            while (window.pollEvent(event)) 
+            {
                 if (event.type == Event::Closed()) {
                     window.close();
                 }
                 if (event.type == Event::TextEntered) {
-                    enter_player_name += static_cast<char>(event.text.unicode);//possible error
+                    enter_player_name += static_cast<char>(event.text.unicode);
                 }
                 if (Keyboard::isKeyPressed(Keyboard::BackSpace) && enter_player_name.size() > 0) {
                     enter_player_name.resize(enter_player_name.size() - 1);
                 }
-                if (Keyboard::isKeyPressed(Keyboard::Enter) && enter_player_name.size() > 1) {
-                    nameentered = true;
-                    break;
+                
+                start.setFillColor(Color::White);
+                if (start.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
+                    if (Mouse::isButtonPressed(Mouse::Left) && enter_player_name.size() > 1) {
+                        nameEntered = true;
+                        break;
+                    }
+                    else
+                        start.setFillColor(Color::Yellow);
+                }
 
-                }
-                if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+                if (Keyboard::isKeyPressed(Keyboard::Enter) && enter_player_name.size() > 1) {
+                   nameEntered = true;
                     break;
                 }
-                t2.setString(enter_player_name);
+                Name.setString(enter_player_name);
                 window.clear();
-                window.draw(t1);
-                window.draw(t2);
+                window.draw(EnterName);
+                window.draw(rectangle);
+                window.draw(Name);
+                window.draw(start);
+                window.draw(back);
                 window.display();
             }
-            if (nameentered == true)
+            if (nameEntered)
                 break;
+                    
+            back.setFillColor(Color::White);
+            if (back.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
+                if (Mouse::isButtonPressed(Mouse::Left)) {
+                    windowNum = 5;
+                    break;
+                }
+                else
+                    back.setFillColor(Color::Yellow);
+            }
         }
+        return enter_player_name;
     }
 };
 
@@ -643,7 +681,7 @@ int main()
     xDistance = rand() % 5 - 2;
     yDistance = rand() % 5 - 2;
 
-    int windowNum = 5;
+    windowNum = 5;
     
     // Main loop
     while (window.isOpen())
@@ -660,14 +698,14 @@ int main()
         }
 
         window.clear(Color::Black);
-
+        
         switch (windowNum)
         {
         case 0:
-            if (nameentered == false)
+            if (nameEntered == false)
                 mainMenu.playername(window);
             else
-            mainMenu.newGameItem(window, maze, clock);
+                mainMenu.newGameItem(window, maze, clock);
             break;
         case 3:
             mainMenu.developersItem(window);
@@ -679,15 +717,8 @@ int main()
             mainMenu.drawing(window);
             windowNum = mainMenu.SelectedItem();
             break;
-        
         }
- 
-/*
-        for (int i = 2; i < 6; i++)
-        {
-            window.draw(updateTarget(i , 0));
-        }
-*/
+
         window.display();
     }
     return 0;
