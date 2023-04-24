@@ -27,10 +27,10 @@ D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(339,73): warning C4244: 'argument'
 D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(339,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(348,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(356,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(498,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(499,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(527,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(538,103): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(511,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(512,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(540,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(551,103): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -39,7 +39,7 @@ D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(538,103): warning C4244: 'argument
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(538,80): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(551,80): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -48,33 +48,33 @@ D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(538,80): warning C4244: 'argument'
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(534,15): warning C4101: 'event': unreferenced local variable
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(533,18): warning C4101: 'keyboard': unreferenced local variable
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(551,31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(551,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(627,78): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(547,15): warning C4101: 'event': unreferenced local variable
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(546,18): warning C4101: 'keyboard': unreferenced local variable
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(564,31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(564,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(640,78): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(627,47): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(640,47): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(628,82): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(641,82): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(628,51): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(641,51): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(645,136): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(652,42): warning C4353: nonstandard extension used: constant 0 as function expression.  Use '__noop' function intrinsic instead
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(663,96): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(658,136): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(665,42): warning C4353: nonstandard extension used: constant 0 as function expression.  Use '__noop' function intrinsic instead
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(676,96): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -83,7 +83,7 @@ D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(663,96): warning C4244: 'argument'
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(663,73): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(676,73): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -92,7 +92,7 @@ D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(663,73): warning C4244: 'argument'
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(689,91): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(702,91): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -101,7 +101,7 @@ D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(689,91): warning C4244: 'argument'
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(689,68): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(702,68): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -110,5 +110,6 @@ D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(689,68): warning C4244: 'argument'
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(548): warning C4715: 'Mainmenu::SelectedItem': not all control paths return a value
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(745,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(561): warning C4715: 'Mainmenu::SelectedItem': not all control paths return a value
   pacMan.vcxproj -> D:\FCIS ASU\Projects\pacMan\pacMan\x64\Debug\pacMan.exe

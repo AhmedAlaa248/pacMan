@@ -482,6 +482,19 @@ void scoreDraw(RenderWindow& window) {
     scoreText.setString(scoredisplay);
         
     window.draw(scoreText);
+
+    Event event;
+    while (window.pollEvent(event))
+    {
+        if (event.type == Event::Closed) {
+            ofstream offile;
+            offile.open("Scores.txt", ios::app);
+            offile << score << '*' << endl;
+            offile.close();
+            window.close();
+
+        }
+    }
 }
 void timerDraw(RenderWindow& window, Clock clock) {
     font.loadFromFile("Fonts/actionj.ttf");
@@ -697,6 +710,53 @@ struct Mainmenu
         }
         return enter_player_name;
     }
+    void bestScoreItem(RenderWindow& window) {
+
+        Font font;
+        font.loadFromFile("Fonts/Lightdot-13x6.ttf");
+        Text bestscoredraw[100];
+
+        for (int i = 0; i < 100; i++) {
+            bestscoredraw[i].setFont(font);
+            bestscoredraw[i].setFillColor(Color::White);
+            bestscoredraw[i].setCharacterSize(50);
+
+        }
+        ifstream infile;
+        infile.open("Scores.txt", ios::in);
+
+        vector<string> lines;
+        string line;
+
+        while (getline(infile, line, '*')) {
+            lines.push_back(line);
+        }
+
+        //adding at first
+        /* for (int i = line.getSize() - 1, j = 0; i >= 0; i--, j++) {
+            bestscoredraw[i].setString(lines[i]);
+            bestscoredraw[i].setPosition(50, j * 100);
+        } */
+            
+
+        //adding at end
+        for (int i = 0; i < lines.size(); i++) {
+            bestscoredraw[i].setString(lines[i]);
+            bestscoredraw[i].setPosition(50, 100 * i);    
+        }
+
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                window.close();
+            }
+            /* if (Keyboard::isKeyPressed(Keyboard::Key::Up))
+                 if (Keyboard::isKeyPressed(Keyboard::Key::Down))*/
+        }
+
+        for (int i = 0; i < lines.size(); i++)
+            window.draw(bestscoredraw[i]);
+    }
    
 };
 
@@ -742,6 +802,9 @@ int main()
                 mainMenu.playername(window);
             else
                 mainMenu.newGameItem(window, maze, clock);
+            break;
+        case 1:
+            mainMenu.bestScoreItem(window);
             break;
         case 3:
             mainMenu.developersItem(window);
