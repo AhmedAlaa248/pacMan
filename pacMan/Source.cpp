@@ -86,7 +86,7 @@ Text mainMenuItems[5];
 bool moveVertical = false;
 bool moveHorizontal = false;
 bool nameEntered = false;
-
+bool GameOver = false;
 char x;
 
 //Vector2i position; 
@@ -236,11 +236,12 @@ void ghostCollisionWithWalls(Sprite ghost,Sprite maze[rows][columns]) {
         }
     }
 }
-//TODO TYPE IT THEN CALL IT 
+//TODO make a gameover screen or a more than 1 life system 
 void ghostCollisionWithPacMan(Sprite ghost) {
     if (ghost.getGlobalBounds().intersects(Images[6].sprite.getGlobalBounds()))
     {
-        
+        GameOver = true;
+        //end game
     }
 }
 
@@ -684,7 +685,7 @@ int main()
     windowNum = 5;
     
     // Main loop
-    while (window.isOpen())
+    while (!GameOver)
     {
         // Handle events
         Event event;
