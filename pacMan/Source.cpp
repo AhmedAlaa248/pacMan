@@ -57,7 +57,7 @@ int board[rows][columns] = {
       {0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0},//8
       {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 2, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},//9
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 9, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//10
-      {1, 1, 1, 1, 1, 1, 1, 1, 0, 4, 5, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1},//11
+      {1, 1, 1, 1, 1, 1, 1, 1, 0, 4, 5, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1},//11 *
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//12
       {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 6, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},//13
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//14
@@ -94,8 +94,8 @@ char x;
 int score = 0;
 Font font;
 
-// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg
-images Images[8];
+// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg , 9 settings background
+images Images[10];
 
 void drawMaze(Sprite maze[rows][columns]) {
     Images[0].texture.loadFromFile("Textures/Wall.png");
@@ -662,6 +662,34 @@ struct Mainmenu
         }
         return enter_player_name;
     }
+    void settingsItem(RenderWindow& window)
+    {
+        Font font;
+        font.loadFromFile("Fonts/Lightdot-13x6.ttf");
+       
+        Text settings,res;
+        settings.setFont(font);
+        settings.setCharacterSize(100);
+        settings.setPosition(10, 10);
+        settings.setFillColor(Color::Yellow);
+        settings.setString("SETTINGS");
+
+        res.setFont(font);
+        res.setCharacterSize(85);
+        res.setPosition(10, 200);
+        res.setString("RESOLUTION");
+       
+        RectangleShape rectangle;         
+        rectangle.setFillColor(Color::Transparent);
+        rectangle.setOutlineThickness(7.f);
+        rectangle.setOutlineColor(Color::White);
+        rectangle.setPosition(600, 200);
+        rectangle.setSize(Vector2f(900,85));
+        window.draw(settings);
+        window.draw(res);
+        window.draw(rectangle);
+       
+    }
 };
 
 int main()
@@ -706,6 +734,9 @@ int main()
                 mainMenu.playername(window);
             else
                 mainMenu.newGameItem(window, maze, clock);
+            break;
+        case 2:
+            mainMenu.settingsItem(window);
             break;
         case 3:
             mainMenu.developersItem(window);
