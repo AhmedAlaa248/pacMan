@@ -57,7 +57,7 @@ int board[rows][columns] = {
       {0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0},//8
       {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 2, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},//9
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 9, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//10
-      {1, 1, 1, 1, 1, 1, 1, 1, 0, 4, 5, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1},//11
+      {0, 1, 1, 1, 1, 1, 1, 1, 0, 4, 5, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1},//11
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//12
       {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 6, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},//13
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//14
@@ -237,11 +237,17 @@ void ghostCollisionWithWalls(Sprite ghost,Sprite maze[rows][columns]) {
     }
 }
 //TODO make a gameover screen or a more than 1 life system 
-void ghostCollisionWithPacMan(Sprite ghost) {
+void ghostCollisionWithPacMan(Sprite ghost , RenderWindow& window) {
     if (ghost.getGlobalBounds().intersects(Images[6].sprite.getGlobalBounds()))
     {
         GameOver = true;
-        //end game
+        font.loadFromFile("Fonts/almosnow.ttf");
+        Text gameOver("Game Over", font, 100);
+        gameOver.setPosition(100, 100);
+        gameOver.setFillColor(Color::White);
+        
+        window.clear(Color::Black);
+        window.draw(gameOver);
     }
 }
 
@@ -532,6 +538,7 @@ struct Mainmenu
         movingPacman(Images[6].sprite, xPosition, yPositon);
         wallCollision(Images[6].sprite, maze);
         ghostMovement(Images[2].sprite, maze);
+        ghostCollisionWithPacMan(Images[2].sprite , window);
         coinCollision(maze);
 
         // Draw the maze
@@ -685,7 +692,7 @@ int main()
     windowNum = 5;
     
     // Main loop
-    while (!GameOver)
+    while (window.isOpen())
     {
         // Handle events
         Event event;
