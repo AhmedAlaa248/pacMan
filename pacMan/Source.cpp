@@ -99,8 +99,8 @@ Music moveSound;
 
 Font font;
 
-// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black
-images Images[9];
+// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black,9 deathpacman
+images Images[10];
 
 void drawMaze(Sprite maze[rows][columns]) {
     Images[0].texture.loadFromFile("Textures/Wall.png");
@@ -253,6 +253,11 @@ void ghostCollisionWithWalls(Sprite ghost,Sprite maze[rows][columns]) {
 void ghostCollisionWithPacMan(Sprite ghost , RenderWindow& window) {
     if (ghost.getGlobalBounds().intersects(Images[6].sprite.getGlobalBounds()))
     {
+      /* Images[9].texture.loadFromFile("Texture/Death.png");
+        for (int x = 0; x < 13; x++) {
+            int y = 0;
+            Images[9].sprite.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
+        }*/
         GameOver = true;
         soundBuffer.loadFromFile("Sounds/pacman-lose.wav");
         sound.setBuffer(soundBuffer);
@@ -271,10 +276,16 @@ void backToMenu(RenderWindow& window) {
     back.setFillColor(Color::White);
     if (back.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
         if (Mouse::isButtonPressed(Mouse::Left)) {
+            soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+            sound.setBuffer(soundBuffer);
+            sound.play();
             windowNum = 5;
         }
         else
             back.setFillColor(Color::Yellow);
+        soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+        sound.setBuffer(soundBuffer);
+        sound.play();
     }
 
     window.draw(back);
@@ -493,10 +504,17 @@ struct Mainmenu
             {
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 {
+                    soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                    sound.setBuffer(soundBuffer);
+                    sound.play();
                     return i;
                 }
-                else
+                else {
+                    soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                    sound.setBuffer(soundBuffer);
+                    sound.play();
                     mainMenuItems[i].setFillColor(Color::Yellow);
+                }
             }
         }
     }
@@ -701,15 +719,19 @@ struct Mainmenu
                 start.setFillColor(Color::White);
                 if (start.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
                     if (Mouse::isButtonPressed(Mouse::Left) && enter_player_name.size() > 1) {
+                       
                         nameEntered = true;
                         sound.play();
                         break;
                     }
-                    else
+                    else {
+                       
                         start.setFillColor(Color::Yellow);
+                    }
                 }
 
                 if (Keyboard::isKeyPressed(Keyboard::Enter) && enter_player_name.size() > 1) {
+                    
                     nameEntered = true;
                     sound.play();
                     break;
@@ -729,6 +751,9 @@ struct Mainmenu
             back.setFillColor(Color::White);
             if (back.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
                 if (Mouse::isButtonPressed(Mouse::Left)) {
+                    soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                    sound.setBuffer(soundBuffer);
+                    sound.play();
                     windowNum = 5;
                     break;
                 }
