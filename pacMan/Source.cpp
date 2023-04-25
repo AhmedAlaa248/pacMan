@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include<SFML/Audio.hpp>
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -91,6 +92,10 @@ bool moveHorizontal = false;
 bool nameEntered = false;
 bool GameOver = false;
 int score = 0;
+
+SoundBuffer soundBuffer;
+Sound sound;
+Music moveSound;
 
 Font font;
 
@@ -203,6 +208,9 @@ void coinCollision(Sprite maze[rows][columns]) {
                 if (board[i][j] == 1) {
                     maze[i][j].setPosition(2000000, 2000000);
                     score++;
+                    soundBuffer.loadFromFile("Sounds/chomp2.wav");
+                    sound.setBuffer(soundBuffer);
+                    sound.play();
                 }
             }
         }
@@ -635,6 +643,9 @@ struct Mainmenu
     string playername(RenderWindow& window) {
         Mouse mouse;
 
+        soundBuffer.loadFromFile("Sounds/start-game.wav");
+        sound.setBuffer(soundBuffer);
+
         Font font;
         font.loadFromFile("Fonts/Lightdot-13x6.ttf");
         Text EnterName, Name;
@@ -686,6 +697,7 @@ struct Mainmenu
                 if (start.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
                     if (Mouse::isButtonPressed(Mouse::Left) && enter_player_name.size() > 1) {
                         nameEntered = true;
+                        sound.play();
                         break;
                     }
                     else
@@ -694,6 +706,7 @@ struct Mainmenu
 
                 if (Keyboard::isKeyPressed(Keyboard::Enter) && enter_player_name.size() > 1) {
                     nameEntered = true;
+                    sound.play();
                     break;
                 }
                 Name.setString(enter_player_name);
