@@ -254,6 +254,11 @@ void ghostCollisionWithPacMan(Sprite ghost , RenderWindow& window) {
     if (ghost.getGlobalBounds().intersects(Images[6].sprite.getGlobalBounds()))
     {
         GameOver = true;
+        soundBuffer.loadFromFile("Sounds/pacman-lose.wav");
+        sound.setBuffer(soundBuffer);
+        sound.play();
+
+
     }
 }
 
