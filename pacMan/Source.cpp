@@ -282,10 +282,7 @@ void backToMenu(RenderWindow& window) {
             windowNum = 5;
         }
         else
-            back.setFillColor(Color::Yellow);
-        soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
-        sound.setBuffer(soundBuffer);
-        sound.play();
+            back.setFillColor(Color::Yellow);        
     }
 
     window.draw(back);
@@ -509,12 +506,8 @@ struct Mainmenu
                     sound.play();
                     return i;
                 }
-                else {
-                    soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
-                    sound.setBuffer(soundBuffer);
-                    sound.play();
+                else 
                     mainMenuItems[i].setFillColor(Color::Yellow);
-                }
             }
         }
     }
@@ -666,9 +659,6 @@ struct Mainmenu
     string playername(RenderWindow& window) {
         Mouse mouse;
 
-        soundBuffer.loadFromFile("Sounds/start-game.wav");
-        sound.setBuffer(soundBuffer);
-
         Font font;
         font.loadFromFile("Fonts/Lightdot-13x6.ttf");
         Text EnterName, Name;
@@ -719,19 +709,21 @@ struct Mainmenu
                 start.setFillColor(Color::White);
                 if (start.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
                     if (Mouse::isButtonPressed(Mouse::Left) && enter_player_name.size() > 1) {
-                       
+                        soundBuffer.loadFromFile("Sounds/start-game.wav");
+                        sound.setBuffer(soundBuffer);
+
                         nameEntered = true;
                         sound.play();
                         break;
                     }
-                    else {
-                       
-                        start.setFillColor(Color::Yellow);
-                    }
+                    else 
+                        start.setFillColor(Color::Yellow);    
                 }
 
                 if (Keyboard::isKeyPressed(Keyboard::Enter) && enter_player_name.size() > 1) {
-                    
+                    soundBuffer.loadFromFile("Sounds/start-game.wav");
+                    sound.setBuffer(soundBuffer);
+
                     nameEntered = true;
                     sound.play();
                     break;
