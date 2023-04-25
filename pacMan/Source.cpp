@@ -609,7 +609,7 @@ struct Mainmenu
         
         Text ourNames , FCIS;
         String names;
-        names = "Ahmed Alaa\n \nAhmed Essam\n \nAhmed Mahmoud\n \nAbdallah Yasser\n \nAbelrahman Maamon\n \nOmar Ali\n \nSalah Eldein Tarek\n \nZiad Saeed";
+        names = "Ahmed Alaa\n \nAhmed Essam\n \nAhmed Mahmoud\n \nAbdallah Yasser\n \nAbelrahman Maamon\n \nOmar Khattab\n \nSalah Eldein Tarek\n \nZiad Saeed";
         
         ourNames.setFont(font);
         ourNames.setString(names);
