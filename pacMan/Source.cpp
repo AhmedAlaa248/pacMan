@@ -91,6 +91,7 @@ int modeWidth = 1920, modeHeight = 1080;
 float xStart = (modeWidth - mazeWidth) / 2;
 float yStart = (modeHeight - mazeHeight) / 2;
 Text mainMenuItems[5];
+Text resolutionItems[3];
 bool moveVertical = false;
 bool moveHorizontal = false;
 bool nameEntered = false;
@@ -694,11 +695,54 @@ struct Mainmenu
         for (int i = 0; i < lines.size(); i++)
             window.draw(bestscoredraw[i]);
     }
+    
     void settingsItem(RenderWindow& window) {
-        //hot el code y 3l22
+        Font font;
+        font.loadFromFile("Fonts/almosnow.ttf");
+       
+        Text resolutionText,settingsText;
+        settingsText.setFont(font);
+        settingsText.setFillColor(Color::Yellow);
+        settingsText.setCharacterSize(75);
+        
+        settingsText.setString("SETTINGS");
 
+        resolutionText.setFont(font);
+        resolutionText.setFillColor(Color::White);
+        resolutionText.setCharacterSize(75);
+        resolutionText.setPosition(10, 150);
+        resolutionText.setString("RESOLUTION : ");
+
+        resolutionItems[0].setString("2560 * 1600      -");
+        resolutionItems[1].setString("1980 * 1060      -");
+        resolutionItems[2].setString("1680 * 1050");
+        
+        for (int i = 0; i < 3; i++) {
+            resolutionItems[i].setFont(font);
+            resolutionItems[i].setCharacterSize(65);
+            resolutionItems[i].setPosition(500 + i * 500,150);
+            window.draw(resolutionItems[i]);
+        }
+        Mouse mouse;
+        for (int i = 0; i < 3; i++)
+        {
+            resolutionItems[i].setFillColor(Color::White);
+            if (resolutionItems[i].getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+            {
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                {
+                    soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                    sound.setBuffer(soundBuffer);
+                    sound.play();
+                }
+                else
+                    resolutionItems[i].setFillColor(Color::Yellow);
+            }
+        }
+
+        window.draw(settingsText);
+        window.draw(resolutionText);
         backToMenu(window);
-
     }
     void developersItem(RenderWindow& window) {
         font.loadFromFile("Fonts/actionj.ttf");
