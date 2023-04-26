@@ -92,6 +92,7 @@ float xStart = (modeWidth - mazeWidth) / 2;
 float yStart = (modeHeight - mazeHeight) / 2;
 Text mainMenuItems[5];
 Text resolutionItems[3];
+Text playWith[2];
 bool moveVertical = false;
 bool moveHorizontal = false;
 bool nameEntered = false;
@@ -700,11 +701,10 @@ struct Mainmenu
         Font font;
         font.loadFromFile("Fonts/almosnow.ttf");
        
-        Text resolutionText,settingsText;
+        Text resolutionText,settingsText,playText;
         settingsText.setFont(font);
         settingsText.setFillColor(Color::Yellow);
         settingsText.setCharacterSize(75);
-        
         settingsText.setString("SETTINGS");
 
         resolutionText.setFont(font);
@@ -712,6 +712,12 @@ struct Mainmenu
         resolutionText.setCharacterSize(75);
         resolutionText.setPosition(10, 150);
         resolutionText.setString("RESOLUTION : ");
+
+        playText.setFont(font);
+        playText.setFillColor(Color::White);
+        playText.setCharacterSize(75);
+        playText.setPosition(10, 390);
+        playText.setString("PLAY WITH : ");
 
         resolutionItems[0].setString("2560 * 1600      -");
         resolutionItems[1].setString("1980 * 1060      -");
@@ -740,8 +746,33 @@ struct Mainmenu
             }
         }
 
+        playWith[0].setString("ARROWS    -");
+        playWith[1].setString("W-A-S-D");
+        for (int i = 0; i < 2; i++) {
+           playWith[i].setFont(font);
+           playWith[i].setCharacterSize(65);
+           playWith[i].setPosition(500 + i * 360, 390);
+            window.draw(playWith[i]);
+        }
+       
+        for (int i = 0; i < 2; i++)
+        {
+           playWith[i].setFillColor(Color::White);
+            if (playWith[i].getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+            {
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                {
+                    soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                    sound.setBuffer(soundBuffer);
+                    sound.play();
+                }
+                else
+                    playWith[i].setFillColor(Color::Yellow);
+            }
+        }
         window.draw(settingsText);
         window.draw(resolutionText);
+        window.draw(playText);
         backToMenu(window);
     }
     void developersItem(RenderWindow& window) {
