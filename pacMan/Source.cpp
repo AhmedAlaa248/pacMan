@@ -1,6 +1,10 @@
 #include <SFML/Graphics.hpp>
+#include<SFML/Audio.hpp>
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
 
 using namespace sf;
 using namespace std;
@@ -57,7 +61,7 @@ int board[rows][columns] = {
       {0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0},//8
       {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 2, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},//9
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 9, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//10
-      {1, 1, 1, 1, 1, 1, 1, 1, 0, 4, 5, 3, 0, 1, 1, 1, 1, 1, 1, 1, 1},//11 *
+      {7, 1, 1, 1, 1, 1, 1, 1, 0, 4, 5, 3, 0, 1, 1, 1, 1, 1, 1, 1, 7},//11
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//12
       {0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 6, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0},//13
       {0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0},//14
@@ -76,6 +80,10 @@ int xPosition = 0;
 int yPositon = 0;
 int xDistance = 0; 
 int yDistance = 0;
+int pinkXdistance = 0;
+int pinkYdistance = 0;
+bool pinkVertical = false;
+bool pinkHoritzontal = false;
 int xStartPosition[8];
 int yStartPosition[8];
 int lastDirection = 5;
@@ -86,20 +94,22 @@ Text mainMenuItems[5];
 bool moveVertical = false;
 bool moveHorizontal = false;
 bool nameEntered = false;
-
-char x;
-
-//Vector2i position; 
-
+bool GameOver = false;
 int score = 0;
+
+SoundBuffer soundBuffer;
+Sound sound;
+Music moveSound;
+
 Font font;
 
-// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg , 9 settings background
+// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black,9 deathpacman
 images Images[10];
 
 void drawMaze(Sprite maze[rows][columns]) {
     Images[0].texture.loadFromFile("Textures/Wall.png");
     Images[1].texture.loadFromFile("Textures/coin.png");
+    Images[8].texture.loadFromFile("Textures/black.png");
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
@@ -142,6 +152,12 @@ void drawMaze(Sprite maze[rows][columns]) {
             case 6:
                 yStartPosition[6] = yStart + i * cellSize;
                 xStartPosition[6] = xStart + j * cellSize;
+                break;
+            case 7:
+                maze[i][j].setTexture(Images[8].texture);
+                maze[i][j].setPosition(xStart + j * cellSize, yStart + i * cellSize);
+                maze[i][j].setScale(2.9, 2.9);
+                break;
             default:
                 break;
             }
@@ -196,6 +212,9 @@ void coinCollision(Sprite maze[rows][columns]) {
                 if (board[i][j] == 1) {
                     maze[i][j].setPosition(2000000, 2000000);
                     score++;
+                    soundBuffer.loadFromFile("Sounds/chomp2.wav");
+                    sound.setBuffer(soundBuffer);
+                    sound.play();
                 }
             }
         }
@@ -217,9 +236,8 @@ void ghostCollisionWithWalls(Sprite ghost,Sprite maze[rows][columns]) {
                         maze[i][j].getPosition().y,
                         1.0f, maze[i][j].getGlobalBounds().height)))
                 {
-
-                    xDistance = -xDistance;
                     moveVertical = true;
+                    xDistance = -xDistance;    
                 }
 
                 if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
@@ -228,22 +246,114 @@ void ghostCollisionWithWalls(Sprite ghost,Sprite maze[rows][columns]) {
                     ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
                         maze[i][j].getPosition().y + wallBoundes.height,
                         wallBoundes.width, 1.0f))) {
-                    yDistance = -yDistance;
                     moveHorizontal = true;
+                    yDistance = -yDistance;
                 }
 
             }
         }
     }
 }
-//TODO TYPE IT THEN CALL IT 
-void ghostCollisionWithPacMan(Sprite ghost) {
-    if (ghost.getGlobalBounds().intersects(Images[6].sprite.getGlobalBounds()))
+void pinkghostCollisionWithWalls(Sprite ghost, Sprite maze[rows][columns]) {
+    FloatRect ghostBoundes = ghost.getGlobalBounds();
+
+    for (int i = 0; i < rows; i++)
     {
-        
+        for (int j = 0; j < columns; j++) {
+            if (board[i][j] == 0) {
+                FloatRect wallBoundes = maze[i][j].getGlobalBounds();
+
+                if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                    maze[i][j].getPosition().y,
+                    1.0f, maze[i][j].getGlobalBounds().height)) ||
+                    ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x + wallBoundes.width,
+                        maze[i][j].getPosition().y,
+                        1.0f, maze[i][j].getGlobalBounds().height)))
+                {
+                    pinkVertical = true;
+                    pinkXdistance = -pinkXdistance;
+                }
+
+                if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                    maze[i][j].getPosition().y,
+                    wallBoundes.width, 1.0f)) ||
+                    ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                        maze[i][j].getPosition().y + wallBoundes.height,
+                        wallBoundes.width, 1.0f))) {
+                    pinkHoritzontal = true;
+                    pinkYdistance = -pinkYdistance;
+                }
+
+            }
+        }
     }
 }
 
+void ghostCollisionWithPacMan(Sprite ghost , RenderWindow& window) {
+    if (ghost.getGlobalBounds().intersects(Images[6].sprite.getGlobalBounds()))
+    {
+      /* Images[9].texture.loadFromFile("Texture/Death.png");
+        for (int x = 0; x < 13; x++) {
+            int y = 0;
+            Images[9].sprite.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
+        }*/
+        GameOver = true;
+        soundBuffer.loadFromFile("Sounds/pacman-lose.wav");
+        sound.setBuffer(soundBuffer);
+        sound.play();
+
+
+    }
+}
+
+void backToMenu(RenderWindow& window) {
+    Text back("Back to main menu", font, 50);
+    back.setPosition((window.getSize().x / 6) * 4, (window.getSize().y / 5) * 4);
+
+    Mouse mouse;
+
+    back.setFillColor(Color::White);
+    if (back.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
+        if (Mouse::isButtonPressed(Mouse::Left)) {
+            soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+            sound.setBuffer(soundBuffer);
+            sound.play();
+            windowNum = 5;
+        }
+        else
+            back.setFillColor(Color::Yellow);        
+    }
+
+    window.draw(back);
+}
+
+void gameOverWindow(RenderWindow& window , string userName) {
+    font.loadFromFile("Fonts/almosnow.ttf");
+    
+    string GoodLuck = "Good luck " + userName + " !";
+    
+    Text gameOver("Game Over", font, 100);
+    Text tryAgain("Try Again", font, 50);
+    Text niceTry(GoodLuck, font , 120);
+    
+    gameOver.setPosition((window.getSize().x / 2) - (gameOver.getGlobalBounds().width / 2), (window.getSize().y / 5) - (gameOver.getGlobalBounds().height / 2));
+    gameOver.setFillColor(Color::White);
+
+    tryAgain.setPosition((window.getSize().x / 4), (window.getSize().y / 5) * 4);
+    tryAgain.setFillColor(Color::White);
+
+    niceTry.setPosition((window.getSize().x / 2) - (niceTry.getGlobalBounds().width / 2), (window.getSize().y / 4) + (niceTry.getGlobalBounds().height));
+    niceTry.setFillColor(Color(155, 114, 205));
+
+    window.clear(Color::Black);
+    
+    backToMenu(window);
+    
+    window.draw(gameOver);
+    window.draw(tryAgain);
+    window.draw(niceTry);
+
+}
 
 //pacMan
 void pacManDrawing() {
@@ -288,6 +398,22 @@ void movingPacman(Sprite& pacMan, int& x, int& y) {
         pacMan.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
     }
 }
+void teleport(Sprite& body, Sprite maze[rows][columns]) {
+    FloatRect playerBoundes = body.getGlobalBounds();
+    FloatRect wallBoundesLeft = maze[11][0].getGlobalBounds();
+    FloatRect wallBoundesRight = maze[11][20].getGlobalBounds();
+
+    if (playerBoundes.intersects(FloatRect(maze[11][0].getPosition().x,
+        maze[11][0].getPosition().y,
+        1.0f, wallBoundesLeft.height))) {
+        body.setPosition(wallBoundesRight.left, wallBoundesRight.top);
+    }
+    if (playerBoundes.intersects(FloatRect(maze[11][20].getPosition().x + wallBoundesRight.width,
+        maze[11][20].getPosition().y,
+        1.0f, maze[11][20].getGlobalBounds().height))) {
+        body.setPosition(wallBoundesLeft.left + 10, wallBoundesLeft.top);
+    }
+}
 
 //ghosts
 void ghostsDrawing() {
@@ -306,17 +432,22 @@ void ghostsDrawing() {
         Images[i].sprite.setPosition(xStartPosition[i], yStartPosition[i]);
     }
 }
-void ghostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
+void redGhostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
 
     //TODO intRect for Animations
+    if (yDistance == 0)
+        yDistance = rand() % 3 - 1;
 
+    if (xDistance == 0)
+        xDistance = rand() % 3 - 1;
+    
     if (moveHorizontal)
     {
         ghost.move(xDistance, 0);
         moveHorizontal = 0;
     }else if(moveVertical)
     {
-        ghost.move(0, 1);
+        ghost.move(0, yDistance);
         moveVertical = 0;
     }
     else 
@@ -330,111 +461,36 @@ void ghostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
     ghostCollisionWithWalls(ghost, maze);
     
 }
+void pinkGhostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
+    //TODO intRect for Animations
 
+    if (pinkYdistance == 0)
+        pinkYdistance = rand() % 4 - 1;
 
-//A* declarartion 
-/*//distance between ghost and target
+    if (pinkXdistance == 0)
+        pinkXdistance = rand() % 4 - 1;
 
-RectangleShape updateTarget(int ghostId , int ghostMode) {
-    float xRightCorner = xStart + mazeWidth - cellSize;
-    float yRightCorner = yStart + mazeHeight - cellSize;
-
-    RectangleShape circle(Vector2f(15, 15));
-    circle.setScale(2.8, 2.8);
-    switch (ghostMode)
+    if (pinkHoritzontal)
     {
-    case 0: // scatter Mode
-        switch (ghostId)
-        {
-        case 2:
-            target = { xRightCorner, yStart };
-            circle.setFillColor(Color::Red);
-            circle.setPosition(target.x, target.y);
-            break;
-        case 3:
-            target = { xStart - cellSize,yStart };
-            circle.setFillColor(Color::Magenta);
-            circle.setPosition(target.x, target.y);
-            break;
-        case 4:
-            target = { xRightCorner,yRightCorner };
-            circle.setFillColor(Color::Cyan);
-            circle.setPosition(target.x, target.y);
-            break;
-        case 5:
-            target = { xStart - cellSize,yRightCorner };
-            circle.setFillColor(Color(250, 165, 0));
-            circle.setPosition(target.x, target.y);
-            break;
-        }
+        ghost.move(pinkXdistance, 0);
+        pinkHoritzontal = 0;
     }
-    return circle;
-}
-
-float target_distance(char direction)
-{
-    float x = position.x;
-    float y = position.y;
-
-    switch (direction)
+    else if (pinkVertical)
     {
-    case 0:
-    {
-        x += ghostspeed;
-
-        break;
+        ghost.move(0, pinkYdistance);
+        pinkVertical = 0;
     }
-    case 1:
-    {
-        y -= ghostspeed;
+    else
+        ghost.move(0, -1);
 
-        break;
-    }
-    case 2:
-    {
-        x -= ghostspeed;
-
-        break;
-    }
-    case 3:
-    {
-        y += ghostspeed;
-    }
-    }
-
-    return static_cast<float>(sqrt(pow(x - target.x, 2) + pow(y - target.y, 2)));
-}
-
-void updateShortestDistance() {
-
-}
-
-void updateMovement(Sprite& ghost, Sprite maze[rows][columns] , int ghostDirection ) {
-    ghost.move(position.x * pacManSpeed, position.y * pacManSpeed);
-    switch (ghostDirection)
-    {
-    case 0:
-        position.x = -1;
-        position.y = 0;
-        break;
-    case 1:
-        position.x = 1;
-        position.y = 0;
-        break;
-    case 2:
-        position.x = 0;
-        position.y = -1;
-        break;
-    case 3:
-        position.x = 0;
-        position.y = 1;
-        break;
-    }
-
-    wallCollision(ghost, maze);
-}
-
+    /*if (xDistance != 0)
+        ghost.move(xDistance, 0);
+    else if (yDistance != 0)
+        ghost.move(0, yDistance);
 */
+    pinkghostCollisionWithWalls(ghost, maze);
+
+}
 
 void scoreDraw(RenderWindow& window) {
     String scoredisplay = "SCORE: " + to_string(score);
@@ -447,8 +503,16 @@ void scoreDraw(RenderWindow& window) {
     scoreText.setFillColor(Color::Yellow);
     scoreText.setPosition(xStart + mazeWidth + 85, 30);
     scoreText.setString(scoredisplay);
-
+        
     window.draw(scoreText);
+
+    if (score != 0 && GameOver) {
+        ofstream offile;
+        offile.open("Scores.txt", ios::app);
+        offile << score << '*' << endl;
+        offile.close();
+     
+    }
 }
 void timerDraw(RenderWindow& window, Clock clock) {
     font.loadFromFile("Fonts/actionj.ttf");
@@ -506,9 +570,12 @@ struct Mainmenu
             {
                 if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
                 {
+                    soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                    sound.setBuffer(soundBuffer);
+                    sound.play();
                     return i;
                 }
-                else
+                else 
                     mainMenuItems[i].setFillColor(Color::Yellow);
             }
         }
@@ -528,32 +595,117 @@ struct Mainmenu
          
 }
     void newGameItem(RenderWindow& window, Sprite maze[rows][columns], Clock clock) {
-        movingPacman(Images[6].sprite, xPosition, yPositon);
-        wallCollision(Images[6].sprite, maze);
-        ghostMovement(Images[2].sprite, maze);
-        coinCollision(maze);
 
-        // Draw the maze
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                window.draw(maze[i][j]);
+        while (window.isOpen())
+        {
+            // Handle events
+            Event event;
+            while (window.pollEvent(event))
+            {
+                // Close the window if the close button is pressed
+                if (event.type == Event::Closed)
+                {
+                    window.close();
+                }
+            }
+
+            window.clear(Color::Black);
+
+            movingPacman(Images[6].sprite, xPosition, yPositon);
+            wallCollision(Images[6].sprite, maze);
+            teleport(Images[6].sprite, maze);
+            teleport(Images[2].sprite, maze);
+            teleport(Images[3].sprite, maze);
+            redGhostMovement(Images[2].sprite, maze);
+            pinkGhostMovement(Images[3].sprite, maze);
+            ghostCollisionWithPacMan(Images[2].sprite, window);
+            ghostCollisionWithPacMan(Images[3].sprite, window);
+            coinCollision(maze);
+
+            // Draw the maze
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < columns; j++) {
+                    window.draw(maze[i][j]);
+                }
+            }
+
+            //Drawing sprites
+            for (int i = 2; i < 7; i++) {
+                window.draw(Images[i].sprite);
+            }
+
+            timerDraw(window, clock);
+            scoreDraw(window);
+            window.display();
+
+            if (GameOver)
+            {
+                windowNum = 6;
+                break;
             }
         }
+    }
+    void bestScoreItem(RenderWindow& window) {
 
-        //Drawing sprites
-        for (int i = 2; i < 7; i++) {
-            window.draw(Images[i].sprite);
+        Font font;
+        font.loadFromFile("Fonts/Lightdot-13x6.ttf");
+        Text bestscoredraw[100];
+
+        for (int i = 0; i < 100; i++) {
+            bestscoredraw[i].setFont(font);
+            bestscoredraw[i].setFillColor(Color::White);
+            bestscoredraw[i].setCharacterSize(50);
+
+        }
+        ifstream infile;
+        infile.open("Scores.txt", ios::in);
+
+        vector<string> lines;
+        string line;
+
+        while (getline(infile, line, '*')) {
+            lines.push_back(line);
         }
 
-        timerDraw(window, clock);
-        scoreDraw(window);
+        //adding at first
+        /* for (int i = line.getSize() - 1, j = 0; i >= 0; i--, j++) {
+            bestscoredraw[i].setString(lines[i]);
+            bestscoredraw[i].setPosition(50, j * 100);
+        } */
+
+
+        //adding at end
+        for (int i = 0; i < lines.size(); i++) {
+            bestscoredraw[i].setString(lines[i]);
+            bestscoredraw[i].setPosition(50, 100 * i);
+        }
+
+        backToMenu(window);
+
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                window.close();
+            }
+            /* if (Keyboard::isKeyPressed(Keyboard::Key::Up))
+                 if (Keyboard::isKeyPressed(Keyboard::Key::Down))*/
+        }
+
+        for (int i = 0; i < lines.size(); i++)
+            window.draw(bestscoredraw[i]);
+    }
+    void settingsItem(RenderWindow& window) {
+        //hot el code y 3l22
+
+        backToMenu(window);
+
     }
     void developersItem(RenderWindow& window) {
         font.loadFromFile("Fonts/actionj.ttf");
         
         Text ourNames , FCIS;
         String names;
-        names = "Ahmed Alaa\n \nAhmed Essam\n \nAhmed Mahmoud\n \nAbdallah Yasser\n \nAbelrahman Maamon\n \nOmar Ali\n \nSalah Eldein Tarek\n \nZiad Saeed";
+        names = "Ahmed Alaa\n \nAhmed Essam\n \nAhmed Mahmoud\n \nAbdallah Yasser\n \nAbelrahman Maamon\n \nOmar Khattab\n \nSalah Eldein Tarek\n \nZiad Saeed";
         
         ourNames.setFont(font);
         ourNames.setString(names);
@@ -571,48 +723,50 @@ struct Mainmenu
 
         moveRandomly(ourNames, window);
 
+        backToMenu(window);
+
         window.draw(FCIS);
         window.draw(ourNames);
 } 
     string playername(RenderWindow& window) {
         Mouse mouse;
-        
+
         Font font;
         font.loadFromFile("Fonts/Lightdot-13x6.ttf");
-        Text EnterName, Name ;
+        Text EnterName, Name;
         string enter_player_name;
         RectangleShape rectangle;
-        
+
         rectangle.setFillColor(Color::Transparent);
         rectangle.setOutlineThickness(7.f);
         rectangle.setOutlineColor(Color::White);
-        
+
         Text start("START", font, 50);
         Text back("Back", font, 50);
         start.setPosition((window.getSize().x / 3), (window.getSize().y / 5) * 4);
-        back.setPosition((window.getSize().x / 6) * 4 , (window.getSize().y / 5) * 4);
-        
+        back.setPosition((window.getSize().x / 6) * 4, (window.getSize().y / 5) * 4);
+
         if (enter_player_name.empty())
             enter_player_name.clear();
-        
+
         EnterName.setFont(font);
         EnterName.setCharacterSize(100);
         EnterName.Bold;
         EnterName.setFillColor(Color::Magenta);
         EnterName.setString("Enter your name:");
         EnterName.setPosition((window.getSize().x / 2) - (EnterName.getGlobalBounds().width / 2), (window.getSize().y / 3) - (EnterName.getGlobalBounds().height / 2));
-        
+
         Name.setFont(font);
         Name.setCharacterSize(55);
         Name.setFillColor(Color::Blue);
         Name.setPosition(30 + (window.getSize().x / 2) - (EnterName.getGlobalBounds().width / 2), (window.getSize().y / 2) - (EnterName.getGlobalBounds().height / 2));
-        
+
         rectangle.setPosition(15 + (window.getSize().x / 2) - (EnterName.getGlobalBounds().width / 2), -2.5 + (window.getSize().y / 2) - (EnterName.getGlobalBounds().height / 2));
         rectangle.setSize(Vector2f(EnterName.getGlobalBounds().width - 30, 60.0));
-        
+
         while (window.isOpen()) {
             Event event;
-            while (window.pollEvent(event)) 
+            while (window.pollEvent(event))
             {
                 if (event.type == Event::Closed()) {
                     window.close();
@@ -623,19 +777,27 @@ struct Mainmenu
                 if (Keyboard::isKeyPressed(Keyboard::BackSpace) && enter_player_name.size() > 0) {
                     enter_player_name.resize(enter_player_name.size() - 1);
                 }
-                
+
                 start.setFillColor(Color::White);
                 if (start.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
                     if (Mouse::isButtonPressed(Mouse::Left) && enter_player_name.size() > 1) {
+                        soundBuffer.loadFromFile("Sounds/start-game.wav");
+                        sound.setBuffer(soundBuffer);
+
                         nameEntered = true;
+                        sound.play();
                         break;
                     }
-                    else
-                        start.setFillColor(Color::Yellow);
+                    else 
+                        start.setFillColor(Color::Yellow);    
                 }
 
                 if (Keyboard::isKeyPressed(Keyboard::Enter) && enter_player_name.size() > 1) {
-                   nameEntered = true;
+                    soundBuffer.loadFromFile("Sounds/start-game.wav");
+                    sound.setBuffer(soundBuffer);
+
+                    nameEntered = true;
+                    sound.play();
                     break;
                 }
                 Name.setString(enter_player_name);
@@ -649,10 +811,13 @@ struct Mainmenu
             }
             if (nameEntered)
                 break;
-                    
+
             back.setFillColor(Color::White);
             if (back.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
                 if (Mouse::isButtonPressed(Mouse::Left)) {
+                    soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                    sound.setBuffer(soundBuffer);
+                    sound.play();
                     windowNum = 5;
                     break;
                 }
@@ -662,59 +827,41 @@ struct Mainmenu
         }
         return enter_player_name;
     }
-    void settingsItem(RenderWindow& window)
-    {
-        Font font;
-        font.loadFromFile("Fonts/Lightdot-13x6.ttf");
-       
-        Text settings,res;
-        settings.setFont(font);
-        settings.setCharacterSize(100);
-        settings.setPosition(10, 10);
-        settings.setFillColor(Color::Yellow);
-        settings.setString("SETTINGS");
-
-        res.setFont(font);
-        res.setCharacterSize(85);
-        res.setPosition(10, 200);
-        res.setString("RESOLUTION");
-       
-        RectangleShape rectangle;         
-        rectangle.setFillColor(Color::Transparent);
-        rectangle.setOutlineThickness(7.f);
-        rectangle.setOutlineColor(Color::White);
-        rectangle.setPosition(600, 200);
-        rectangle.setSize(Vector2f(900,85));
-        window.draw(settings);
-        window.draw(res);
-        window.draw(rectangle);
-       
-    }
+   
 };
 
 int main()
 {
+    srand(time(0));
+
     // Create the window
     RenderWindow window(VideoMode(modeWidth, modeHeight), "Pac-Man");
-
+    window.setFramerateLimit(60);
+    
     Sprite maze[rows][columns];
     Clock clock;
-    Text text;
+    string userName;
 
     Mainmenu mainMenu; 
     drawMaze(maze);
     pacManDrawing();
     ghostsDrawing();
     
-    xDistance = rand() % 5 - 2;
-    yDistance = rand() % 5 - 2;
+    xDistance = (rand() % 3) - 1;
+    yDistance = (rand() % 3) - 1;
+    pinkXdistance = (rand() % 3) - 1;
+    pinkYdistance = (rand() % 3) - 1;
+
+    Vector2f pinkpos;
+    pinkpos = Images[3].sprite.getPosition();
+    Images[3].sprite.setPosition(Vector2f(Images[5].sprite.getPosition().x, Images[5].sprite.getPosition().y));
+
 
     windowNum = 5;
     
     // Main loop
     while (window.isOpen())
     {
-        // Handle events
         Event event;
         while (window.pollEvent(event))
         {
@@ -731,9 +878,12 @@ int main()
         {
         case 0:
             if (nameEntered == false)
-                mainMenu.playername(window);
+                userName = mainMenu.playername(window);
             else
                 mainMenu.newGameItem(window, maze, clock);
+            break;
+        case 1:
+            mainMenu.bestScoreItem(window);
             break;
         case 2:
             mainMenu.settingsItem(window);
@@ -747,6 +897,9 @@ int main()
         case 5:
             mainMenu.drawing(window);
             windowNum = mainMenu.SelectedItem();
+            break;
+        case 6:
+             gameOverWindow(window , userName);
             break;
         }
 
