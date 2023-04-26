@@ -80,6 +80,10 @@ int xPosition = 0;
 int yPositon = 0;
 int xDistance = 0; 
 int yDistance = 0;
+int pinkXdistance = 0;
+int pinkYdistance = 0;
+bool pinkVertical = false;
+bool pinkHoritzontal = false;
 int xStartPosition[8];
 int yStartPosition[8];
 int lastDirection = 5;
@@ -250,6 +254,41 @@ void ghostCollisionWithWalls(Sprite ghost,Sprite maze[rows][columns]) {
         }
     }
 }
+void pinkghostCollisionWithWalls(Sprite ghost, Sprite maze[rows][columns]) {
+    FloatRect ghostBoundes = ghost.getGlobalBounds();
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; j++) {
+            if (board[i][j] == 0) {
+                FloatRect wallBoundes = maze[i][j].getGlobalBounds();
+
+                if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                    maze[i][j].getPosition().y,
+                    1.0f, maze[i][j].getGlobalBounds().height)) ||
+                    ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x + wallBoundes.width,
+                        maze[i][j].getPosition().y,
+                        1.0f, maze[i][j].getGlobalBounds().height)))
+                {
+                    pinkVertical = true;
+                    pinkXdistance = -pinkXdistance;
+                }
+
+                if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                    maze[i][j].getPosition().y,
+                    wallBoundes.width, 1.0f)) ||
+                    ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                        maze[i][j].getPosition().y + wallBoundes.height,
+                        wallBoundes.width, 1.0f))) {
+                    pinkHoritzontal = true;
+                    pinkYdistance = -pinkYdistance;
+                }
+
+            }
+        }
+    }
+}
+
 void ghostCollisionWithPacMan(Sprite ghost , RenderWindow& window) {
     if (ghost.getGlobalBounds().intersects(Images[6].sprite.getGlobalBounds()))
     {
@@ -397,10 +436,10 @@ void redGhostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
 
     //TODO intRect for Animations
     if (yDistance == 0)
-        yDistance = (rand() % 3) - 1;
+        yDistance = rand() % 3 - 1;
 
     if (xDistance == 0)
-        xDistance = (rand() % 3) - 1;
+        xDistance = rand() % 3 - 1;
     
     if (moveHorizontal)
     {
@@ -421,6 +460,36 @@ void redGhostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
 */
     ghostCollisionWithWalls(ghost, maze);
     
+}
+void pinkGhostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
+    //TODO intRect for Animations
+
+    if (pinkYdistance == 0)
+        pinkYdistance = rand() % 4 - 1;
+
+    if (pinkXdistance == 0)
+        pinkXdistance = rand() % 4 - 1;
+
+    if (pinkHoritzontal)
+    {
+        ghost.move(pinkXdistance, 0);
+        pinkHoritzontal = 0;
+    }
+    else if (pinkVertical)
+    {
+        ghost.move(0, pinkYdistance);
+        pinkVertical = 0;
+    }
+    else
+        ghost.move(0, -1);
+
+    /*if (xDistance != 0)
+        ghost.move(xDistance, 0);
+    else if (yDistance != 0)
+        ghost.move(0, yDistance);
+*/
+    pinkghostCollisionWithWalls(ghost, maze);
+
 }
 
 void scoreDraw(RenderWindow& window) {
@@ -546,8 +615,11 @@ struct Mainmenu
             wallCollision(Images[6].sprite, maze);
             teleport(Images[6].sprite, maze);
             teleport(Images[2].sprite, maze);
+            teleport(Images[3].sprite, maze);
             redGhostMovement(Images[2].sprite, maze);
+            pinkGhostMovement(Images[3].sprite, maze);
             ghostCollisionWithPacMan(Images[2].sprite, window);
+            ghostCollisionWithPacMan(Images[3].sprite, window);
             coinCollision(maze);
 
             // Draw the maze
@@ -777,6 +849,13 @@ int main()
     
     xDistance = (rand() % 3) - 1;
     yDistance = (rand() % 3) - 1;
+    pinkXdistance = (rand() % 3) - 1;
+    pinkYdistance = (rand() % 3) - 1;
+
+    Vector2f pinkpos;
+    pinkpos = Images[3].sprite.getPosition();
+    Images[3].sprite.setPosition(Vector2f(Images[5].sprite.getPosition().x, Images[5].sprite.getPosition().y));
+
 
     windowNum = 5;
     
