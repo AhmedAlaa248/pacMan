@@ -758,28 +758,35 @@ struct Mainmenu
 
             movingPacman(Images[6].sprite, xPosition, yPositon);
             wallCollision(Images[6].sprite, maze);
-            teleport(Images[2].sprite, maze);
-            teleport(Images[3].sprite, maze);
-
+            
             teleport(Images[6].sprite, maze);
+
+            teleport(Images[2].sprite, maze);
             redGhostMovement(Images[2].sprite, maze);
-            pinkGhostMovement(Images[3].sprite, maze);
-
             ghostCollisionWithPacMan(Images[2].sprite, window);
-            ghostCollisionWithPacMan(Images[3].sprite, window);
 
-            if (score >= 5)
+
+            teleport(Images[5].sprite, maze);
+            orangeGhostMovement(Images[5].sprite, maze);
+            ghostCollisionWithPacMan(Images[5].sprite, window);
+            
+            if (score == 5)
+                Images[3].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
+            else if (score == 10)
+                Images[4].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
+
+            if (score > 5)
             {
-                teleport(Images[5].sprite, maze);
-                orangeGhostMovement(Images[5].sprite, maze);
-                ghostCollisionWithPacMan(Images[5].sprite, window);
+                teleport(Images[3].sprite, maze);
+                pinkGhostMovement(Images[3].sprite, maze);
+                ghostCollisionWithPacMan(Images[3].sprite, window);
             }
 
 
             if (score >= 10)
             {
                 teleport(Images[4].sprite, maze);
-                orangeGhostMovement(Images[4].sprite, maze);
+                blueGhostMovement(Images[4].sprite, maze);
                 ghostCollisionWithPacMan(Images[4].sprite, window);
             }
 
@@ -1088,12 +1095,8 @@ int main()
     pinkYdistance = (rand() % 3) - 1;
     orangeXdistance = (rand() % 3) - 1;
     orangeYdistance = (rand() % 3) - 1;
-
-    //Vector2f pinkpos;
-    //pinkpos = Images[3].sprite.getPosition();
-    Images[3].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
-
-    // Images[4].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
+    blueXdistance = (rand() % 3) - 1;
+    blueYdistance = (rand() % 3) - 1;
 
     windowNum = 5;
 
