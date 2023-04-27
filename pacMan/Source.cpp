@@ -119,7 +119,7 @@ struct Ghosts {
 
         }
     }
-    void ghostCollisionWithWalls(Sprite ghost, Sprite maze[rows][columns]) {
+    void ghostCollisionWithWalls(Sprite ghost, Sprite maze[rows][columns] , int x , int y) {
         FloatRect ghostBoundes = ghost.getGlobalBounds();
 
         for (int i = 0; i < rows; i++)
@@ -136,7 +136,7 @@ struct Ghosts {
                             1.0f, maze[i][j].getGlobalBounds().height)))
                     {
                         moveVertical = true;
-                        xDistance = -xDistance;
+                        x = -x;
                     }
 
                     if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
@@ -146,41 +146,41 @@ struct Ghosts {
                             maze[i][j].getPosition().y + wallBoundes.height,
                             wallBoundes.width, 1.0f))) {
                         moveHorizontal = true;
-                        yDistance = -yDistance;
+                        y = -y;
                     }
 
                 }
             }
         }
     }
-    void ghostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
+    void ghostMovement(Sprite& ghost, Sprite maze[rows][columns], int x , int y) {
 
         //TODO intRect for Animations
-        if (yDistance == 0)
-            yDistance = rand() % 3 - 1;
+        if (y == 0)
+            y = rand() % 3 - 1;
 
-        if (xDistance == 0)
-            xDistance = rand() % 3 - 1;
+        if (x == 0)
+            x = rand() % 3 - 1;
 
         if (moveHorizontal)
         {
-            ghost.move(xDistance, 0);
+            ghost.move(x, 0);
             moveHorizontal = 0;
         }
         else if (moveVertical)
         {
-            ghost.move(0, yDistance);
+            ghost.move(0, y);
             moveVertical = 0;
         }
         else
-            ghost.move(xDistance, 0);
+            ghost.move(x, 0);
 
         /*if (xDistance != 0)
             ghost.move(xDistance, 0);
         else if (yDistance != 0)
             ghost.move(0, yDistance);
     */
-        ghostCollisionWithWalls(ghost, maze);
+        ghostCollisionWithWalls(ghost, maze, xDistance, yDistance);
 
     }
 
@@ -562,8 +562,8 @@ struct Mainmenu
             teleport(Images[3].sprite, maze);
 
             teleport(Images[6].sprite, maze);
-            red.ghostMovement(Images[2].sprite, maze);
-            pink.ghostMovement(Images[3].sprite, maze);
+            red.ghostMovement(Images[2].sprite, maze, red.xDistance, red.yDistance);
+            pink.ghostMovement(Images[3].sprite, maze, pink.xDistance, pink.xDistance);
 
             red.ghostCollisionWithPacMan(Images[2].sprite, window);
             pink.ghostCollisionWithPacMan(Images[3].sprite, window);
@@ -571,7 +571,7 @@ struct Mainmenu
             if (score >= 5)
             {
                 teleport(Images[5].sprite, maze);
-                orange.ghostMovement(Images[5].sprite, maze);
+                orange.ghostMovement(Images[5].sprite, maze, orange.xDistance, orange.yDistance);
                 orange.ghostCollisionWithPacMan(Images[5].sprite, window);
             }
 
@@ -579,7 +579,7 @@ struct Mainmenu
             if (score >= 10)
             {
                 teleport(Images[4].sprite, maze);
-                blue.ghostMovement(Images[4].sprite, maze);
+                blue.ghostMovement(Images[4].sprite, maze, blue.xDistance, blue.yDistance);
                 blue.ghostCollisionWithPacMan(Images[4].sprite, window);
             }
 
@@ -890,6 +890,15 @@ int main()
     orange.yDistance = (rand() % 3) - 1;
     blue.xDistance = (rand() % 3) - 1;
     blue.yDistance = (rand() % 3) - 1;
+    
+    red.moveHorizontal = false;
+    red.moveVertical = false;
+    pink.moveHorizontal = false;
+    pink.moveVertical = false;
+    orange.moveHorizontal = false;
+    orange.moveVertical = false;
+    blue.moveHorizontal = false;
+    blue.moveVertical = false;
 
     //Vector2f pinkpos;
     //pinkpos = Images[3].sprite.getPosition();

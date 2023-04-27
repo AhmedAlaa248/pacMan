@@ -186,12 +186,12 @@ D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(851,68): warning C4244: 'argument'
               T=float
           ]
 D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(870,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(896,78): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(905,78): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(896,59): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+D:\FCIS ASU\Projects\pacMan\pacMan\Source.cpp(905,59): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
