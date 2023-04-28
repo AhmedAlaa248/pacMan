@@ -99,11 +99,14 @@ Music moveSound;
 
 Font font;
 
+// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black,9 deathpacman
+images Images[10];
+
 struct Ghosts {
-    int xDistance, yDistance;
+    int xDistance , yDistance;
     bool moveVertical, moveHorizontal;
 
-    void ghostCollisionWithPacMan(Sprite ghost, RenderWindow& window) {
+    void ghostCollisionWithPacMan(Sprite& ghost, RenderWindow& window) {
         if (ghost.getGlobalBounds().intersects(Images[6].sprite.getGlobalBounds()))
         {
             /* Images[9].texture.loadFromFile("Texture/Death.png");
@@ -119,7 +122,7 @@ struct Ghosts {
 
         }
     }
-    void ghostCollisionWithWalls(Sprite ghost, Sprite maze[rows][columns], int x, int y) {
+    void ghostCollisionWithWalls(Sprite& ghost, Sprite maze[rows][columns], int& x, int& y) {
         FloatRect ghostBoundes = ghost.getGlobalBounds();
 
         for (int i = 0; i < rows; i++)
@@ -130,13 +133,19 @@ struct Ghosts {
 
                     if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
                         maze[i][j].getPosition().y,
-                        1.0f, maze[i][j].getGlobalBounds().height)) ||
-                        ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x + wallBoundes.width,
+                        1.0f, maze[i][j].getGlobalBounds().height)))
+                    {
+                        moveVertical = true;
+                        x = -x;
+                        //cout << "Left" << '\n';
+                    }
+                    if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x + wallBoundes.width,
                             maze[i][j].getPosition().y,
                             1.0f, maze[i][j].getGlobalBounds().height)))
                     {
                         moveVertical = true;
                         x = -x;
+                        //cout << "Right" << '\n';
                     }
 
                     if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
@@ -161,21 +170,37 @@ struct Ghosts {
 
         if (x == 0)
             x = rand() % 3 - 1;
+        
+        cout << moveHorizontal << '\t' << moveVertical << '\n';
 
         if (moveHorizontal)
         {
             ghost.move(x, 0);
             moveHorizontal = 0;
-        }
-        else if (moveVertical)
+        }else if (moveVertical)
         {
             ghost.move(0, y);
             moveVertical = 0;
         }
+        else if(!moveVertical && !moveHorizontal)
+        {
+            if(&ghost == &Images[2].sprite)
+            {
+                ghost.move(x, 0);
+                cout << "R" << '\n';
+            }
+            else
+            {
+                ghost.move(0, -1);
+                cout << "Else" << '\t' << moveHorizontal << '\t' << moveHorizontal  << '\n';
+            }
+        }
         else
+        {
             ghost.move(x, 0);
+        }
 
-        /*if (xDistance != 0)
+    /*    if (xDistance != 0)
             ghost.move(xDistance, 0);
         else if (yDistance != 0)
             ghost.move(0, yDistance);
@@ -189,8 +214,6 @@ struct Ghosts {
 Ghosts red, pink, orange, blue;
 
 
-// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black,9 deathpacman
-images Images[10];
 
 void drawMaze(Sprite maze[rows][columns]) {
     Images[0].texture.loadFromFile("Textures/Wall.png");
@@ -558,29 +581,46 @@ struct Mainmenu
 
             movingPacman(Images[6].sprite, xPosition, yPositon);
             wallCollision(Images[6].sprite, maze);
+            
             teleport(Images[2].sprite, maze);
-            teleport(Images[3].sprite, maze);
-
+            teleport(Images[5].sprite, maze);
             teleport(Images[6].sprite, maze);
+
             red.ghostMovement(Images[2].sprite, maze, red.xDistance, red.yDistance);
-            pink.ghostMovement(Images[3].sprite, maze, pink.xDistance, pink.xDistance);
+            orange.ghostMovement(Images[5].sprite, maze, orange.xDistance, orange.yDistance);
 
+            orange.ghostCollisionWithPacMan(Images[5].sprite, window);
             red.ghostCollisionWithPacMan(Images[2].sprite, window);
-            pink.ghostCollisionWithPacMan(Images[3].sprite, window);
 
-            if (score >= 5)
+
+            if (score == 5)
             {
-                teleport(Images[5].sprite, maze);
-                orange.ghostMovement(Images[5].sprite, maze, orange.xDistance, orange.yDistance);
-                orange.ghostCollisionWithPacMan(Images[5].sprite, window);
+                Images[3].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
+
             }
 
 
+            if (score > 5)
+            {
+                teleport(Images[3].sprite, maze);
+                pink.ghostMovement(Images[3].sprite, maze, pink.xDistance, pink.yDistance);
+                pink.ghostCollisionWithPacMan(Images[3].sprite, window);
+
+            }
+
+            if (score == 10)
+            {
+                Images[4].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
+
+            }
+            
             if (score >= 10)
+            
             {
                 teleport(Images[4].sprite, maze);
                 blue.ghostMovement(Images[4].sprite, maze, blue.xDistance, blue.yDistance);
                 blue.ghostCollisionWithPacMan(Images[4].sprite, window);
+
             }
 
             coinCollision(maze);
@@ -705,7 +745,7 @@ struct Mainmenu
                     resolutionItems[i].setFillColor(Color::Yellow);
             }
         }
-
+        
         playWith[0].setString("ARROWS    -");
         playWith[1].setString("W-A-S-D");
         for (int i = 0; i < 2; i++) {
@@ -881,7 +921,6 @@ int main()
     drawMaze(maze);
     pacManDrawing();
     ghostsDrawing();
-
     red.xDistance = (rand() % 3) - 1;
     red.yDistance = (rand() % 3) - 1;
     pink.xDistance = (rand() % 3) - 1;
@@ -890,7 +929,7 @@ int main()
     orange.yDistance = (rand() % 3) - 1;
     blue.xDistance = (rand() % 3) - 1;
     blue.yDistance = (rand() % 3) - 1;
-
+    
     red.moveHorizontal = false;
     red.moveVertical = false;
     pink.moveHorizontal = false;
@@ -899,12 +938,10 @@ int main()
     orange.moveVertical = false;
     blue.moveHorizontal = false;
     blue.moveVertical = false;
-
+    
+    
     //Vector2f pinkpos;
     //pinkpos = Images[3].sprite.getPosition();
-    Images[3].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
-
-    // Images[4].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
 
     windowNum = 5;
 
