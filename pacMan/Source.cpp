@@ -636,8 +636,9 @@ void blueGhostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
 }
 
 
-void scoreDraw(RenderWindow& window) {
-    String scoredisplay = "SCORE: " + to_string(score);
+void scoreDraw(RenderWindow& window , string name) {
+    
+    string scoredisplay = "SCORE: " + to_string(score);
 
     font.loadFromFile("Fonts/actionj.ttf");
 
@@ -650,12 +651,24 @@ void scoreDraw(RenderWindow& window) {
 
     window.draw(scoreText);
 
-    if (score != 0 && GameOver) {
-        ofstream offile;
-        offile.open("Scores.txt", ios::app);
-        offile << score << '*' << endl;
-        offile.close();
+    vector<pair <int, string>> lines;
+    pair<int, string> line;
+    line.first = score;
+    line.second = name;
+    lines.push_back(line);
+    sort(lines.begin(), lines.end());
+    
 
+    
+    if (score != 0 && GameOver) {
+      
+       
+        ofstream offile;
+        offile.open("dashboard.txt", ios::app);
+        for (int i = 0; i < lines.size(); i++) {
+            offile << lines[i].second << "  " << lines[i].first << '*' << endl;
+            offile.close();
+        }
     }
 }
 void timerDraw(RenderWindow& window, Clock& clock) {
@@ -738,7 +751,7 @@ struct Mainmenu
         }
 
     }
-    void newGameItem(RenderWindow& window, Sprite maze[rows][columns], Clock clock) {
+    void newGameItem(RenderWindow& window, Sprite maze[rows][columns], Clock clock, string name) {
 
         Clock ck;
         while (window.isOpen())
@@ -805,7 +818,7 @@ struct Mainmenu
             }
 
             timerDraw(window, ck);
-            scoreDraw(window);
+            scoreDraw(window , name);
             window.display();
 
             if (GameOver)
@@ -820,34 +833,33 @@ struct Mainmenu
         Font font;
         font.loadFromFile("Fonts/Lightdot-13x6.ttf");
         Text bestscoredraw[100];
+        Text title; String header="Best Scores";
+        title.setFont(font);
+        title.setFillColor(Color::Magenta);
+        title.setCharacterSize(100);
+        title.setString(header);
+        title.setPosition(100,50);
 
-        for (int i = 0; i < 100; i++) {
-            bestscoredraw[i].setFont(font);
-            bestscoredraw[i].setFillColor(Color::White);
-            bestscoredraw[i].setCharacterSize(50);
 
-        }
+
         ifstream infile;
-        infile.open("Scores.txt", ios::in);
+        infile.open("dashboard.txt", ios::in);
 
         vector<string> lines;
-        string line;
+        string sLine;
 
-        while (getline(infile, line, '*')) {
-            lines.push_back(line);
+        while (getline(infile, sLine, '*')) {
+            
+            lines.push_back(sLine);
         }
-
-        //adding at first
-        /* for (int i = line.getSize() - 1, j = 0; i >= 0; i--, j++) {
-            bestscoredraw[i].setString(lines[i]);
-            bestscoredraw[i].setPosition(50, j * 100);
-        } */
-
 
         //adding at end
         for (int i = 0; i < lines.size(); i++) {
+            bestscoredraw[i].setFont(font);
+            bestscoredraw[i].setFillColor(Color::White);
+            bestscoredraw[i].setCharacterSize(50);
             bestscoredraw[i].setString(lines[i]);
-            bestscoredraw[i].setPosition(50, 100 * i);
+            bestscoredraw[i].setPosition(650, 100 * i+200);
         }
 
         backToMenu(window);
@@ -860,6 +872,7 @@ struct Mainmenu
             /* if (Keyboard::isKeyPressed(Keyboard::Key::Up))
                  if (Keyboard::isKeyPressed(Keyboard::Key::Down))*/
         }
+        window.draw(title);
 
         for (int i = 0; i < lines.size(); i++)
             window.draw(bestscoredraw[i]);
@@ -985,8 +998,8 @@ struct Mainmenu
 
         Text start("START", font, 50);
         Text back("Back", font, 50);
-        start.setPosition((window.getSize().x / 3), (window.getSize().y / 5) * 4);
-        back.setPosition((window.getSize().x / 6) * 4, (window.getSize().y / 5) * 4);
+        back.setPosition((window.getSize().x / 3), (window.getSize().y / 5) * 4);
+        start.setPosition((window.getSize().x / 6) * 4, (window.getSize().y / 5) * 4);
 
         if (enter_player_name.empty())
             enter_player_name.clear();
@@ -1121,7 +1134,7 @@ int main()
             if (nameEntered == false)
                 userName = mainMenu.playername(window);
             else
-                mainMenu.newGameItem(window, maze, clock);
+                mainMenu.newGameItem(window, maze, clock , userName);
             break;
         case 1:
             mainMenu.bestScoreItem(window);

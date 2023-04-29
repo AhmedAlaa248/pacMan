@@ -1,27 +1,27 @@
 ﻿  Source.cpp
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(132,45): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(142,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(143,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(147,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(148,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(152,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(153,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(157,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(158,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(163,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(164,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(169,45): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(180,77): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(132,45): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(142,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(143,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(147,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(148,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(152,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(153,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(157,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(158,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(163,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(164,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(169,45): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(180,77): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(180,47): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(180,47): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(185,83): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(185,83): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -30,7 +30,7 @@ D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(185,83): warning C4
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(185,60): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(185,60): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -39,52 +39,43 @@ D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(185,60): warning C4
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(215,77): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(215,77): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(215,46): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(215,46): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(237,69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(237,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(263,57): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(237,69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(237,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(263,57): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=int
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(263,41): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(263,41): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=int
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(514,73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(514,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(528,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(533,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(537,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(558,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(563,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(588,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(593,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(618,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(623,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(673,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(674,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(702,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(713,103): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=int
-          ]
-          and
-          [
-              T=float
-          ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(713,80): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(514,73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(514,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(528,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(533,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(537,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(558,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(563,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(588,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(593,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(618,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(623,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(686,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(687,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(715,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(726,103): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -93,33 +84,7 @@ D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(713,80): warning C4
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(709,15): warning C4101: 'event': unreferenced local variable
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(708,18): warning C4101: 'keyboard': unreferenced local variable
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(729,30): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(729,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(774,90): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(774,71): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(776,90): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(776,71): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(850,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(896,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(903,105): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(726,80): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -128,7 +93,33 @@ D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(903,105): warning C
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(903,82): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(722,15): warning C4101: 'event': unreferenced local variable
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(721,18): warning C4101: 'keyboard': unreferenced local variable
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(742,30): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(742,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(787,90): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(787,71): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(789,90): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(789,71): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(862,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(909,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(916,105): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -137,8 +128,7 @@ D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(903,82): warning C4
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(921,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(928,98): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(916,82): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -147,7 +137,8 @@ D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(928,98): warning C4
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(928,75): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(934,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(941,98): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -156,29 +147,38 @@ D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(928,75): warning C4
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(988,78): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(941,75): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(1001,77): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(988,47): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(1001,46): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(989,81): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(1002,82): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(989,51): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(1002,52): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(1006,136): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(1013,42): warning C4353: nonstandard extension used: constant 0 as function expression.  Use '__noop' function intrinsic instead
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(1024,96): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(1019,136): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(1026,42): warning C4353: nonstandard extension used: constant 0 as function expression.  Use '__noop' function intrinsic instead
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(1037,96): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -187,7 +187,7 @@ D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(1024,96): warning C
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(1024,73): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(1037,73): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -196,7 +196,7 @@ D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(1024,73): warning C
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(1058,91): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(1071,91): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -205,7 +205,7 @@ D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(1058,91): warning C
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(1058,68): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(1071,68): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
           with
           [
               T=int
@@ -214,6 +214,6 @@ D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(1058,68): warning C
           [
               T=float
           ]
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(1077,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\Source.cpp(726): warning C4715: 'Mainmenu::SelectedItem': not all control paths return a value
-  pacMan.vcxproj -> D:\FCIS ASU\Projects\pacMan randomMovement\pacMan\x64\Debug\pacMan.exe
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(1090,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\Source.cpp(739): warning C4715: 'Mainmenu::SelectedItem': not all control paths return a value
+  pacMan.vcxproj -> C:\Users\Abdelrahman\Documents\GitHub\pacMan\pacMan\x64\Debug\pacMan.exe
