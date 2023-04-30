@@ -17,7 +17,6 @@ const float pacManSpeed = 1;
 const float mazeHeight = (rows)*cellSize;
 const float mazeWidth = (columns)*cellSize;
 
-
 //enum ghostDir {LEFT = 0, RIGHT , UP , DOWN };
 
 struct images
@@ -65,20 +64,6 @@ int board[rows][columns] = {
 int windowNum;
 int xPosition = 0;
 int yPositon = 0;
-//int xDistance = 0;
-//int yDistance = 0;
-int pinkXdistance = 0;
-int pinkYdistance = 0;
-bool pinkVertical = false;
-bool pinkHoritzontal = false;
-int orangeXdistance = 0;
-int orangeYdistance = 0;
-bool orangeVertical = false;
-bool orangeHoritzontal = false;
-int blueXdistance = 0;
-int blueYdistance = 0;
-bool blueVertical = false;
-bool blueHoritzontal = false;
 int xStartPosition[8];
 int yStartPosition[8];
 int modeWidth = 1920, modeHeight = 1080;
@@ -87,10 +72,9 @@ float yStart = (modeHeight - mazeHeight) / 2;
 Text mainMenuItems[5];
 Text resolutionItems[3];
 Text playWith[2];
-bool moveVertical = false;
-bool moveHorizontal = false;
 bool nameEntered = false;
 bool GameOver = false;
+bool resetGame = false;
 int score = 0;
 
 SoundBuffer soundBuffer;
@@ -213,8 +197,6 @@ struct Ghosts {
 
 Ghosts red, pink, orange, blue;
 
-
-
 void drawMaze(Sprite maze[rows][columns]) {
     Images[0].texture.loadFromFile("Textures/Wall.png");
     Images[1].texture.loadFromFile("Textures/coin.png");
@@ -274,7 +256,7 @@ void drawMaze(Sprite maze[rows][columns]) {
     }
 }
 
-void backToMenu(RenderWindow& window) {
+bool backToMenu(RenderWindow& window) {
     Text back("Back to main menu", font, 50);
     back.setPosition((window.getSize().x / 6) * 4, (window.getSize().y / 5) * 4);
 
@@ -287,43 +269,16 @@ void backToMenu(RenderWindow& window) {
             sound.setBuffer(soundBuffer);
             sound.play();
             windowNum = 5;
+            nameEntered = false;
+            return true;
         }
         else
             back.setFillColor(Color::Yellow);
     }
     if (GameOver)
-    {
         GameOver = false;
-    }
 
     window.draw(back);
-}
-
-void gameOverWindow(RenderWindow& window, string userName) {
-    font.loadFromFile("Fonts/almosnow.ttf");
-
-    string GoodLuck = "Good luck " + userName + " !";
-
-    Text gameOver("Game Over", font, 200);
-    Text tryAgain("Try Again", font, 50);
-    Text niceTry(GoodLuck, font, 120);
-
-    gameOver.setPosition((window.getSize().x / 2) - (gameOver.getGlobalBounds().width / 2), (window.getSize().y / 5) - (gameOver.getGlobalBounds().height / 2));
-    gameOver.setFillColor(Color::White);
-
-    tryAgain.setPosition((window.getSize().x / 4), (window.getSize().y / 5) * 4);
-    tryAgain.setFillColor(Color::White);
-
-    niceTry.setPosition((window.getSize().x / 2) - (niceTry.getGlobalBounds().width / 2), (window.getSize().y / 4) + (niceTry.getGlobalBounds().height));
-    niceTry.setFillColor(Color(155, 114, 205));
-
-    window.clear(Color::Black);
-
-    backToMenu(window);
-
-    window.draw(gameOver);
-    window.draw(tryAgain);
-    window.draw(niceTry);
 
 }
 
@@ -461,8 +416,73 @@ void ghostsDrawing() {
     }
 }
 
-void scoreDraw(RenderWindow& window) {
-    String scoredisplay = "SCORE: " + to_string(score);
+void gameOverWindow(RenderWindow& window, string userName, Sprite maze[rows][columns]) {
+    font.loadFromFile("Fonts/almosnow.ttf");
+
+    Mouse mouse;
+    string GoodLuck = "Good luck " + userName + " !";
+
+    Text gameOver("Game Over", font, 200);
+    Text tryAgain("Try Again", font, 50);
+    Text niceTry(GoodLuck, font, 120);
+
+    gameOver.setPosition((window.getSize().x / 2) - (gameOver.getGlobalBounds().width / 2), (window.getSize().y / 5) - (gameOver.getGlobalBounds().height / 2));
+    gameOver.setFillColor(Color::White);
+
+    tryAgain.setPosition((window.getSize().x / 4), (window.getSize().y / 5) * 4);
+    tryAgain.setFillColor(Color::White);
+
+    niceTry.setPosition((window.getSize().x / 2) - (niceTry.getGlobalBounds().width / 2), (window.getSize().y / 4) + (niceTry.getGlobalBounds().height));
+    niceTry.setFillColor(Color(155, 114, 205));
+
+
+    while (window.isOpen())
+    {
+        // Handle events
+        Event event;
+        while (window.pollEvent(event))
+        {
+            // Close the window if the close button is pressed
+            if (event.type == Event::Closed)
+                window.close();
+        }
+
+        tryAgain.setFillColor(Color::White);
+        if (tryAgain.getGlobalBounds().contains(tryAgain.getPosition().x, mouse.getPosition().y)) {
+            if (Mouse::isButtonPressed(Mouse::Left)) {
+                soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                sound.setBuffer(soundBuffer);
+                sound.play();
+                windowNum = 0;
+                if (resetGame)
+                {
+                    drawMaze(maze);
+                    pacManDrawing();
+                    ghostsDrawing();
+                    resetGame = false;
+                    score = 0;
+                }
+            }
+            else
+                tryAgain.setFillColor(Color::Yellow);
+        }
+        window.clear(Color::Black);
+
+        window.draw(gameOver);
+        window.draw(tryAgain);
+        window.draw(niceTry);
+
+        if (backToMenu(window))
+            break;
+
+        window.display();
+
+    }
+}
+
+void scoreDraw(RenderWindow& window, string name) {
+
+    string scoredisplay = "SCORE: " + to_string(score);
 
     font.loadFromFile("Fonts/actionj.ttf");
 
@@ -475,12 +495,23 @@ void scoreDraw(RenderWindow& window) {
 
     window.draw(scoreText);
 
-    if (score != 0 && GameOver) {
-        ofstream offile;
-        offile.open("Scores.txt", ios::app);
-        offile << score << '*' << endl;
-        offile.close();
+    vector<pair <int, string>> lines;
+    pair<int, string> line;
+    line.first = score;
+    line.second = name;
+    lines.push_back(line);
 
+    sort(lines.begin(), lines.end());
+
+
+    if (score != 0 && GameOver) {
+
+        ofstream offile;
+        offile.open("dashboard.txt", ios::app);
+        for (int i = 0; i < lines.size(); i++) {
+            offile << lines[i].second << "    " << lines[i].first << '*' << endl;
+            offile.close();
+        }
     }
 }
 void timerDraw(RenderWindow& window, Clock& clock) {
@@ -561,11 +592,20 @@ struct Mainmenu
             xDistance = -yDistance;
         }*/
     }
-    void newGameItem(RenderWindow& window, Sprite maze[rows][columns], Clock clock) {
+    void newGameItem(RenderWindow& window, Sprite maze[rows][columns], Clock clock,string name) {
 
         Clock ck;
         while (window.isOpen())
         {
+            if (resetGame)
+            {
+                drawMaze(maze);
+                pacManDrawing();
+                ghostsDrawing();
+                resetGame = false;
+                score = 0;
+            }
+
             // Handle events
             Event event;
             while (window.pollEvent(event))
@@ -638,12 +678,13 @@ struct Mainmenu
             }
 
             timerDraw(window, ck);
-            scoreDraw(window);
+            scoreDraw(window,name);
             window.display();
 
             if (GameOver)
             {
                 windowNum = 6;
+                resetGame = true;
                 break;
             }
         }
@@ -653,34 +694,31 @@ struct Mainmenu
         Font font;
         font.loadFromFile("Fonts/Lightdot-13x6.ttf");
         Text bestscoredraw[100];
+        Text title; String header = "Best Scores";
+        title.setFont(font);
+        title.setFillColor(Color::Magenta);
+        title.setCharacterSize(100);
+        title.setString(header);
+        title.setPosition(100, 50);
 
-        for (int i = 0; i < 100; i++) {
-            bestscoredraw[i].setFont(font);
-            bestscoredraw[i].setFillColor(Color::White);
-            bestscoredraw[i].setCharacterSize(50);
-
-        }
         ifstream infile;
-        infile.open("Scores.txt", ios::in);
+        infile.open("dashboard.txt", ios::in);
 
         vector<string> lines;
-        string line;
+        string sLine;
 
-        while (getline(infile, line, '*')) {
-            lines.push_back(line);
+        while (getline(infile, sLine, '*')) {
+
+            lines.push_back(sLine);
         }
-
-        //adding at first
-        /* for (int i = line.getSize() - 1, j = 0; i >= 0; i--, j++) {
-            bestscoredraw[i].setString(lines[i]);
-            bestscoredraw[i].setPosition(50, j * 100);
-        } */
-
 
         //adding at end
         for (int i = 0; i < lines.size(); i++) {
+            bestscoredraw[i].setFont(font);
+            bestscoredraw[i].setFillColor(Color::White);
+            bestscoredraw[i].setCharacterSize(50);
             bestscoredraw[i].setString(lines[i]);
-            bestscoredraw[i].setPosition(50, 100 * i);
+            bestscoredraw[i].setPosition((window.getSize().x / 3), 100 * i + 200);
         }
 
         backToMenu(window);
@@ -693,6 +731,7 @@ struct Mainmenu
             /* if (Keyboard::isKeyPressed(Keyboard::Key::Up))
                  if (Keyboard::isKeyPressed(Keyboard::Key::Down))*/
         }
+        window.draw(title);
 
         for (int i = 0; i < lines.size(); i++)
             window.draw(bestscoredraw[i]);
@@ -966,7 +1005,7 @@ int main()
             if (nameEntered == false)
                 userName = mainMenu.playername(window);
             else
-                mainMenu.newGameItem(window, maze, clock);
+                mainMenu.newGameItem(window, maze, clock, userName);
             break;
         case 1:
             mainMenu.bestScoreItem(window);
@@ -985,7 +1024,7 @@ int main()
             windowNum = mainMenu.SelectedItem();
             break;
         case 6:
-            gameOverWindow(window, userName);
+            gameOverWindow(window, userName , maze);
             break;
         }
 
