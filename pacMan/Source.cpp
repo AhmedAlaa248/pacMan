@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include<SFML/Audio.hpp>
 #include <iostream>
+#include <algorithm>
 #include <string>
 #include <fstream>
 #include <iomanip>
@@ -105,6 +106,7 @@ bool moveVertical = false;
 bool moveHorizontal = false;
 bool nameEntered = false;
 bool GameOver = false;
+bool resetGame = false;
 int score = 0;
 
 SoundBuffer soundBuffer;
@@ -175,7 +177,7 @@ void drawMaze(Sprite maze[rows][columns]) {
     }
 }
 
-void backToMenu(RenderWindow& window) {
+bool backToMenu(RenderWindow& window) {
     Text back("Back to main menu", font, 50);
     back.setPosition((window.getSize().x / 6) * 4, (window.getSize().y / 5) * 4);
 
@@ -188,44 +190,17 @@ void backToMenu(RenderWindow& window) {
             sound.setBuffer(soundBuffer);
             sound.play();
             windowNum = 5;
+            nameEntered = false;
+            return true;
         }
         else
             back.setFillColor(Color::Yellow);
     }
     if (GameOver)
-    {
         GameOver = false;
-    }
-
+    
     window.draw(back);
-}
-
-void gameOverWindow(RenderWindow& window, string userName) {
-    font.loadFromFile("Fonts/almosnow.ttf");
-
-    string GoodLuck = "Good luck " + userName + " !";
-
-    Text gameOver("Game Over", font, 200);
-    Text tryAgain("Try Again", font, 50);
-    Text niceTry(GoodLuck, font, 120);
-
-    gameOver.setPosition((window.getSize().x / 2) - (gameOver.getGlobalBounds().width / 2), (window.getSize().y / 5) - (gameOver.getGlobalBounds().height / 2));
-    gameOver.setFillColor(Color::White);
-
-    tryAgain.setPosition((window.getSize().x / 4), (window.getSize().y / 5) * 4);
-    tryAgain.setFillColor(Color::White);
-
-    niceTry.setPosition((window.getSize().x / 2) - (niceTry.getGlobalBounds().width / 2), (window.getSize().y / 4) + (niceTry.getGlobalBounds().height));
-    niceTry.setFillColor(Color(155, 114, 205));
-
-    window.clear(Color::Black);
-
-    backToMenu(window);
-
-    window.draw(gameOver);
-    window.draw(tryAgain);
-    window.draw(niceTry);
-
+    
 }
 
 //pacMan
@@ -635,6 +610,69 @@ void blueGhostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
 
 }
 
+void gameOverWindow(RenderWindow& window, string userName, Sprite maze[rows][columns]) {
+    font.loadFromFile("Fonts/almosnow.ttf");
+
+    Mouse mouse;
+    string GoodLuck = "Good luck " + userName + " !";
+
+    Text gameOver("Game Over", font, 200);
+    Text tryAgain("Try Again", font, 50);
+    Text niceTry(GoodLuck, font, 120);
+
+    gameOver.setPosition((window.getSize().x / 2) - (gameOver.getGlobalBounds().width / 2), (window.getSize().y / 5) - (gameOver.getGlobalBounds().height / 2));
+    gameOver.setFillColor(Color::White);
+
+    tryAgain.setPosition((window.getSize().x / 4), (window.getSize().y / 5) * 4);
+    tryAgain.setFillColor(Color::White);
+
+    niceTry.setPosition((window.getSize().x / 2) - (niceTry.getGlobalBounds().width / 2), (window.getSize().y / 4) + (niceTry.getGlobalBounds().height));
+    niceTry.setFillColor(Color(155, 114, 205));
+
+
+    while (window.isOpen())
+    {
+        // Handle events
+        Event event;
+        while (window.pollEvent(event))
+        {
+            // Close the window if the close button is pressed
+            if (event.type == Event::Closed)
+                window.close();
+        }
+
+        tryAgain.setFillColor(Color::White);
+        if (tryAgain.getGlobalBounds().contains(tryAgain.getPosition().x, mouse.getPosition().y)) {
+            if (Mouse::isButtonPressed(Mouse::Left)) {
+                soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                sound.setBuffer(soundBuffer);
+                sound.play();
+                windowNum = 0;
+                if (resetGame)
+                {
+                    drawMaze(maze);
+                    pacManDrawing();
+                    ghostsDrawing();
+                    resetGame = false;
+                    score = 0;
+                }
+            }
+            else
+                tryAgain.setFillColor(Color::Yellow);
+        }
+        window.clear(Color::Black);
+
+        window.draw(gameOver);
+        window.draw(tryAgain);
+        window.draw(niceTry);
+
+        if (backToMenu(window))
+            break;
+
+        window.display();
+
+    }
+}
 
 void scoreDraw(RenderWindow& window , string name) {
     
@@ -656,17 +694,16 @@ void scoreDraw(RenderWindow& window , string name) {
     line.first = score;
     line.second = name;
     lines.push_back(line);
-    sort(lines.begin(), lines.end());
-    
 
-    
+    sort(lines.begin(), lines.end());
+
+
     if (score != 0 && GameOver) {
-      
        
         ofstream offile;
         offile.open("dashboard.txt", ios::app);
         for (int i = 0; i < lines.size(); i++) {
-            offile << lines[i].second << "  " << lines[i].first << '*' << endl;
+            offile << lines[i].second << "    " << lines[i].first << '*' << endl;
             offile.close();
         }
     }
@@ -752,19 +789,26 @@ struct Mainmenu
 
     }
     void newGameItem(RenderWindow& window, Sprite maze[rows][columns], Clock clock, string name) {
-
         Clock ck;
+       
         while (window.isOpen())
         {
+            if (resetGame)
+            {
+                drawMaze(maze);
+                pacManDrawing();
+                ghostsDrawing();
+                resetGame = false;
+                score = 0;
+            }
+
             // Handle events
             Event event;
             while (window.pollEvent(event))
             {
                 // Close the window if the close button is pressed
                 if (event.type == Event::Closed)
-                {
-                    window.close();
-                }
+                    window.close();    
             }
 
             window.clear(Color::Black);
@@ -820,10 +864,12 @@ struct Mainmenu
             timerDraw(window, ck);
             scoreDraw(window , name);
             window.display();
+         
 
             if (GameOver)
             {
                 windowNum = 6;
+                resetGame = true;
                 break;
             }
         }
@@ -839,8 +885,6 @@ struct Mainmenu
         title.setCharacterSize(100);
         title.setString(header);
         title.setPosition(100,50);
-
-
 
         ifstream infile;
         infile.open("dashboard.txt", ios::in);
@@ -859,7 +903,7 @@ struct Mainmenu
             bestscoredraw[i].setFillColor(Color::White);
             bestscoredraw[i].setCharacterSize(50);
             bestscoredraw[i].setString(lines[i]);
-            bestscoredraw[i].setPosition(650, 100 * i+200);
+            bestscoredraw[i].setPosition((window.getSize().x / 3) , 100 * i + 200);
         }
 
         backToMenu(window);
@@ -1153,7 +1197,7 @@ int main()
             windowNum = mainMenu.SelectedItem();
             break;
         case 6:
-            gameOverWindow(window, userName);
+            gameOverWindow(window, userName , maze);
             break;
         }
 
