@@ -1,1 +1,234 @@
-﻿  pacMan.vcxproj -> D:\FCIS ASU\Projects\pacMan\pacMan\x64\Debug\pacMan.exe
+﻿  Source.cpp
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(135,45): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(145,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(146,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(150,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(151,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(155,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(156,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(160,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(161,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(166,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(167,44): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(172,45): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(183,77): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(183,47): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(188,83): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(188,60): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(213,69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(213,50): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(239,57): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(239,41): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(490,73): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(490,54): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(504,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(511,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(518,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(539,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(547,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(575,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(583,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(611,20): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(619,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(650,77): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(650,46): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(669,94): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(747,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(748,17): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(776,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(787,103): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(787,80): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(783,15): warning C4101: 'event': unreferenced local variable
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(782,18): warning C4101: 'keyboard': unreferenced local variable
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(803,30): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(803,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(855,90): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(855,71): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(857,90): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(857,71): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(930,77): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(930,62): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(977,48): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(984,105): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(984,82): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1002,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1009,98): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1009,75): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1069,77): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1069,46): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1070,82): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1070,52): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+          with
+          [
+              T=unsigned int
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1087,136): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1094,42): warning C4353: nonstandard extension used: constant 0 as function expression.  Use '__noop' function intrinsic instead
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1105,96): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1105,73): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1139,91): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1139,68): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(1158,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(205): warning C4715: 'backToMenu': not all control paths return a value
+C:\Users\omark\Desktop\pacMan\pacMan\Source.cpp(800): warning C4715: 'Mainmenu::SelectedItem': not all control paths return a value
+  pacMan.vcxproj -> C:\Users\omark\Desktop\pacMan\pacMan\x64\Debug\pacMan.exe

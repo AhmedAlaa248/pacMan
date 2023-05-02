@@ -108,6 +108,7 @@ bool nameEntered = false;
 bool GameOver = false;
 bool resetGame = false;
 int score = 0;
+int counter = 0;
 
 SoundBuffer soundBuffer;
 Sound sound;
@@ -502,11 +503,16 @@ void redGhostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
     {
         ghost.move(xDistance, 0);
         moveHorizontal = 0;
+        Images[2].sprite.setTextureRect(IntRect(xPosition * 16, yPositon * 16, 16, 16));
+        xPosition %= 2;
     }
     else if (moveVertical)
     {
         ghost.move(0, yDistance);
         moveVertical = 0;
+        yPositon = 3;
+        Images[2].sprite.setTextureRect(IntRect(xPosition * 16, yPositon * 16, 16, 16));
+        xPosition %= 2;
     }
     else
         ghost.move(xDistance, 0);
@@ -532,11 +538,17 @@ void pinkGhostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
     {
         ghost.move(pinkXdistance, 0);
         pinkHoritzontal = 0;
+        Images[3].sprite.setTextureRect(IntRect(xPosition * 16, yPositon * 16, 16, 16));
+        xPosition %= 2;
+
     }
     else if (pinkVertical)
     {
         ghost.move(0, pinkYdistance);
         pinkVertical = 0;
+        yPositon = 3;
+        Images[3].sprite.setTextureRect(IntRect(xPosition * 16, yPositon * 16, 16, 16));
+        xPosition %= 2;
     }
     else
         ghost.move(0, -1);
@@ -562,11 +574,17 @@ void orangeGhostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
     {
         ghost.move(orangeXdistance, 0);
         orangeHoritzontal = 0;
+        Images[5].sprite.setTextureRect(IntRect(xPosition * 16, yPositon * 16, 16, 16));
+        xPosition %= 2;
+
     }
     else if (orangeVertical)
     {
         ghost.move(0, orangeYdistance);
         orangeVertical = 0;
+        yPositon = 2;
+        Images[5].sprite.setTextureRect(IntRect(xPosition * 16, yPositon * 16, 16, 16));
+        xPosition %= 2;
     }
     else
         ghost.move(0, -1);
@@ -592,11 +610,17 @@ void blueGhostMovement(Sprite& ghost, Sprite maze[rows][columns]) {
     {
         ghost.move(blueXdistance, 0);
         blueHoritzontal = 0;
+        Images[4].sprite.setTextureRect(IntRect(xPosition * 16, yPositon * 16, 16, 16));
+        xPosition %= 2;
+
     }
     else if (blueVertical)
     {
         ghost.move(0, blueYdistance);
         blueVertical = 0;
+        yPositon = 2;
+        Images[4].sprite.setTextureRect(IntRect(xPosition * 16, yPositon * 16, 16, 16));
+        xPosition %= 2;
     }
     else
         ghost.move(0, -1);

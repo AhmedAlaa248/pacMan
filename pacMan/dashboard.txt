@@ -11,3 +11,6 @@ a    5*
 a    9*
 a    4*
 a    4*
+khattab    58*
+khattab    47*
+khattab    22*
