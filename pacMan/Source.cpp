@@ -5,7 +5,11 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
-
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <unistd.h>
+#endif
 using namespace sf;
 using namespace std;
 
@@ -13,7 +17,7 @@ const int rows = 23;
 const int columns = 21;
 const float cellSize = 47;
 const float ghostspeed = 1;
-const float pacManSpeed = 1;
+const float pacManSpeed = 3;
 const float mazeHeight = (rows)*cellSize;
 const float mazeWidth = (columns)*cellSize;
 
@@ -69,6 +73,9 @@ bool nameEntered = false;
 bool GameOver = false;
 bool resetGame = false;
 int score = 0;
+int lives = 3;
+void ReturnGameToStart();
+
 
 SoundBuffer soundBuffer, sB;
 Sound sound, s;
@@ -76,8 +83,8 @@ Music moveSound;
 
 Font font;
 
-// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black,9 deathpacman
-images Images[10];
+// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black,9 deathpacman,10 livespacman
+images Images[11];
 
 struct Ghosts {
     int xDistance, yDistance;
@@ -86,18 +93,27 @@ struct Ghosts {
     void ghostCollisionWithPacMan(Sprite& ghost, RenderWindow& window) {
         if (ghost.getGlobalBounds().intersects(Images[6].sprite.getGlobalBounds()))
         {
-            /* Images[9].texture.loadFromFile("Texture/Death.png");
-              for (int x = 0; x < 13; x++) {
-                  int y = 0;
-                  Images[9].sprite.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
-              }*/
-            GameOver = true;
+            lives--;
             soundBuffer.loadFromFile("Sounds/pacman-lose.wav");
             sound.setBuffer(soundBuffer);
             sound.play();
-
-
+            Images[9].texture.loadFromFile("Textures/Death.png");
+            for (int x = 0; x < 13; x++) {
+                int y = 0;
+                Images[9].sprite.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
+            }
+            ReturnGameToStart();
+           
         }
+            if (lives == 0)
+            {
+                GameOver = true;
+                //soundBuffer.loadFromFile("Sounds/pacman-lose.wav");
+                //sound.setBuffer(soundBuffer);
+                //sound.play();
+
+            }
+        
     }
     void ghostCollisionWithWalls(Sprite& ghost, Sprite maze[rows][columns], int& x, int& y, bool& mV, bool& mH) {
         FloatRect ghostBoundes = ghost.getGlobalBounds();
@@ -153,12 +169,8 @@ struct Ghosts {
             cout << mH << '\t' << mV << '\t' << y << '\n';
 
 
-        if (mV && mH)
-        {
-            ghost.move(x, 0);
-            mV = 0;
-        }
-        else if (mV)
+       
+        if (mV)
         {
             ghost.move(0, y);
             mV = 0;
@@ -197,6 +209,22 @@ struct Ghosts {
 };
 
 Ghosts red, pink, orange, blue;
+void ReturnGameToStart()
+{
+    for (int i = 2; i <= 6; i++)
+    {
+        Images[i].sprite.setPosition(Vector2f(xStartPosition[i], yStartPosition[i]));
+    }
+    if (lives >= 1)
+    {
+        Sleep(1000);
+
+   }
+    blue.yDistance = -1;
+    pink.yDistance = -1;
+    orange.yDistance = -1;
+
+}
 
 void drawMaze(Sprite maze[rows][columns]) {
     Images[0].texture.loadFromFile("Textures/Wall.png");
@@ -468,6 +496,7 @@ void gameOverWindow(RenderWindow& window, string userName, Sprite maze[rows][col
                 windowNum = 0;
                 if (resetGame)
                 {
+                    lives = 3;
                     drawMaze(maze);
                     pacManDrawing();
                     ghostsDrawing();
@@ -547,6 +576,45 @@ void timerDraw(RenderWindow& window, Clock& clock) {
     timeText.setString(timeWord);
 
     window.draw(timeText);
+}
+void livesDraw(RenderWindow& window, string name) {
+
+    string scoredisplay = "LIVES: "+to_string(lives);
+    Texture pacmanlive1;
+
+
+    Sprite pacmanlivesprite[3];
+    for (int i = 0; i < 3; i++)
+    {
+        pacmanlivesprite[i].setTexture(Images[6].texture);
+
+        pacmanlivesprite[i].setTextureRect(IntRect(16, 0, 16, 16));
+
+        pacmanlivesprite[i].setPosition(xStart + mazeWidth + 85+(cellSize*i), 115);
+
+
+        pacmanlivesprite[i].setScale(2.5, 2.5);
+    }
+   
+    
+
+    font.loadFromFile("Fonts/actionj.ttf");
+
+    Text livesText;
+    livesText.setFont(font);
+    livesText.setCharacterSize(45);
+    livesText.setFillColor(Color::Yellow);
+    livesText.setPosition(xStart + mazeWidth + 85, 75);
+    livesText.setString(scoredisplay);
+
+    window.draw(livesText);
+    for (int i = 0; i < lives; i++)
+    {
+        window.draw(pacmanlivesprite[i]);
+   }
+   
+   
+
 }
 
 struct Mainmenu
@@ -691,6 +759,7 @@ struct Mainmenu
 
             timerDraw(window, ck);
             scoreDraw(window, name);
+            livesDraw(window, name);
             window.display();
 
             if (GameOver)
