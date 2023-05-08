@@ -74,6 +74,7 @@ bool GameOver = false;
 bool resetGame = false;
 int score = 0;
 int lives = 3;
+int xDeath = 0;
 void returnGameToStart();
 
 
@@ -98,11 +99,13 @@ struct Ghosts {
             soundBuffer.loadFromFile("Sounds/pacman-lose.wav");
             sound.setBuffer(soundBuffer);
             sound.play();
+            
+            //TODO Edit death
             Images[9].texture.loadFromFile("Textures/Death.png");
-            for (int x = 0; x < 13; x++) {
-                int y = 0;
-                Images[9].sprite.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
-            }
+            Images[6].sprite.setTexture(Images[9].texture);
+            Images[6].sprite.setTextureRect(IntRect(16 * xDeath, 0, 16, 16));
+            xDeath++;
+
             returnGameToStart();
 
         }
@@ -237,15 +240,17 @@ struct Ghosts {
 Ghosts red, pink, orange, blue;
 void returnGameToStart()
 {
+    if (lives >= 1)
+    {
+        Images[6].sprite.setTexture(Images[6].texture);
+        Sleep(1000);
+    }
+
     for (int i = 2; i <= 6; i++)
     {
         Images[i].sprite.setPosition(Vector2f(xStartPosition[i], yStartPosition[i]));
     }
-    if (lives >= 1)
-    {
-        Sleep(1000);
 
-    }
     blue.yDistance = -1;
     pink.yDistance = -1;
     orange.yDistance = -1;
