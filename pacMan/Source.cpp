@@ -74,7 +74,7 @@ bool GameOver = false;
 bool resetGame = false;
 int score = 0;
 int lives = 3;
-void ReturnGameToStart();
+void returnGameToStart();
 
 
 SoundBuffer soundBuffer, sB;
@@ -87,6 +87,7 @@ Font font;
 images Images[11];
 
 struct Ghosts {
+    int xA, yA;
     int xDistance, yDistance;
     bool moveVertical, moveHorizontal;
 
@@ -102,18 +103,18 @@ struct Ghosts {
                 int y = 0;
                 Images[9].sprite.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
             }
-            ReturnGameToStart();
-           
-        }
-            if (lives == 0)
-            {
-                GameOver = true;
-                //soundBuffer.loadFromFile("Sounds/pacman-lose.wav");
-                //sound.setBuffer(soundBuffer);
-                //sound.play();
+            returnGameToStart();
 
-            }
-        
+        }
+        if (lives == 0)
+        {
+            GameOver = true;
+            //soundBuffer.loadFromFile("Sounds/pacman-lose.wav");
+            //sound.setBuffer(soundBuffer);
+            //sound.play();
+
+        }
+
     }
     void ghostCollisionWithWalls(Sprite& ghost, Sprite maze[rows][columns], int& x, int& y, bool& mV, bool& mH) {
         FloatRect ghostBoundes = ghost.getGlobalBounds();
@@ -169,16 +170,36 @@ struct Ghosts {
             cout << mH << '\t' << mV << '\t' << y << '\n';
 
 
-       
         if (mV)
         {
             ghost.move(0, y);
             mV = 0;
+            //Animation bayza
+            if (y > 0)
+                yA = 3;
+            else
+                yA = 2;
+
+            xA = 0;
+            ghost.setTextureRect(IntRect(xA * 16, yA * 16, 16, 16));
+            xA++;
+            xA %= 2;
         }
         else if (mH)
         {
             ghost.move(x, 0);
             mH = 0;
+            //Animation bayza
+            if (x > 0)
+                yA = 0;
+            else
+                yA = 1;
+
+            xA = 0;
+            ghost.setTextureRect(IntRect(xA * 16, yA * 16, 16, 16));
+            xA++;
+            xA %= 2;
+
         }
         /*else if(!moveVertical && !moveHorizontal)
         {
@@ -196,6 +217,11 @@ struct Ghosts {
         else
         {
             ghost.move(0, -1);
+            yA = 2;
+            xA = 0;
+            ghost.setTextureRect(IntRect(xA * 16, yA * 16, 16, 16));
+            xA++;
+            xA %= 2;
         }
 
         /*    if (xDistance != 0)
@@ -209,7 +235,7 @@ struct Ghosts {
 };
 
 Ghosts red, pink, orange, blue;
-void ReturnGameToStart()
+void returnGameToStart()
 {
     for (int i = 2; i <= 6; i++)
     {
@@ -219,7 +245,7 @@ void ReturnGameToStart()
     {
         Sleep(1000);
 
-   }
+    }
     blue.yDistance = -1;
     pink.yDistance = -1;
     orange.yDistance = -1;
@@ -521,6 +547,17 @@ void gameOverWindow(RenderWindow& window, string userName, Sprite maze[rows][col
     }
 }
 
+int* startTime(Clock& clock) {
+    Time passed;
+    passed = clock.getElapsedTime();
+
+    int* time = new int[3];
+
+    time[0] = passed.asSeconds() / 60;              //minutes
+    time[1] = passed.asSeconds() - time[0] * 60;    //seconds
+    return time;
+}
+
 void scoreDraw(RenderWindow& window, string name) {
 
     string scoredisplay = "SCORE: " + to_string(score);
@@ -579,7 +616,7 @@ void timerDraw(RenderWindow& window, Clock& clock) {
 }
 void livesDraw(RenderWindow& window, string name) {
 
-    string scoredisplay = "LIVES: "+to_string(lives);
+    string scoredisplay = "LIVES:" + to_string(lives);
     Texture pacmanlive1;
 
 
@@ -587,16 +624,10 @@ void livesDraw(RenderWindow& window, string name) {
     for (int i = 0; i < 3; i++)
     {
         pacmanlivesprite[i].setTexture(Images[6].texture);
-
         pacmanlivesprite[i].setTextureRect(IntRect(16, 0, 16, 16));
-
-        pacmanlivesprite[i].setPosition(xStart + mazeWidth + 85+(cellSize*i), 115);
-
-
+        pacmanlivesprite[i].setPosition(xStart - 200 + (cellSize * i), window.getSize().y / 2 + cellSize);
         pacmanlivesprite[i].setScale(2.5, 2.5);
     }
-   
-    
 
     font.loadFromFile("Fonts/actionj.ttf");
 
@@ -604,16 +635,14 @@ void livesDraw(RenderWindow& window, string name) {
     livesText.setFont(font);
     livesText.setCharacterSize(45);
     livesText.setFillColor(Color::Yellow);
-    livesText.setPosition(xStart + mazeWidth + 85, 75);
+    livesText.setPosition(xStart - 200, window.getSize().y / 2);
     livesText.setString(scoredisplay);
 
     window.draw(livesText);
     for (int i = 0; i < lives; i++)
     {
         window.draw(pacmanlivesprite[i]);
-   }
-   
-   
+    }
 
 }
 
@@ -674,9 +703,10 @@ struct Mainmenu
     }
     void newGameItem(RenderWindow& window, Sprite maze[rows][columns], Clock clock, string name) {
 
-        Clock ck;
+        Clock ck, ck1;
         while (window.isOpen())
         {
+            int* time = startTime(ck1);
             if (resetGame)
             {
                 drawMaze(maze);
@@ -698,51 +728,43 @@ struct Mainmenu
             }
 
             window.clear(Color::Black);
-
-            movingPacman(Images[6].sprite, xPosition, yPositon);
-            wallCollision(Images[6].sprite, maze);
-
-            teleport(Images[2].sprite, maze);
-            teleport(Images[5].sprite, maze);
-            teleport(Images[6].sprite, maze);
-
-            red.ghostMovement(Images[2].sprite, maze, red.xDistance, red.yDistance, true, red.moveVertical, red.moveHorizontal);
-            orange.ghostMovement(Images[5].sprite, maze, orange.xDistance, orange.yDistance, false, orange.moveVertical, orange.moveHorizontal);
-
-            orange.ghostCollisionWithPacMan(Images[5].sprite, window);
-            red.ghostCollisionWithPacMan(Images[2].sprite, window);
-
-
-            if (score == 5)
+            if (time[1] >= 4 || time[0] > 0)
             {
-                Images[3].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
+                movingPacman(Images[6].sprite, xPosition, yPositon);
+                wallCollision(Images[6].sprite, maze);
 
+                teleport(Images[2].sprite, maze);
+                teleport(Images[5].sprite, maze);
+                teleport(Images[6].sprite, maze);
+
+                red.ghostMovement(Images[2].sprite, maze, red.xDistance, red.yDistance, true, red.moveVertical, red.moveHorizontal);
+                orange.ghostMovement(Images[5].sprite, maze, orange.xDistance, orange.yDistance, false, orange.moveVertical, orange.moveHorizontal);
+
+                orange.ghostCollisionWithPacMan(Images[5].sprite, window);
+                red.ghostCollisionWithPacMan(Images[2].sprite, window);
+
+
+                if (time[1] == 10 && time[0] == 0)
+                    Images[3].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
+
+                if (time[1] >= 10)
+                {
+                    teleport(Images[3].sprite, maze);
+                    pink.ghostMovement(Images[3].sprite, maze, pink.xDistance, pink.yDistance, false, pink.moveVertical, pink.moveHorizontal);
+                    pink.ghostCollisionWithPacMan(Images[3].sprite, window);
+                }
+
+                if (time[1] == 15 && time[0] == 0)
+                    Images[4].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
+
+                if (time[1] >= 15)
+                {
+                    teleport(Images[4].sprite, maze);
+                    blue.ghostMovement(Images[4].sprite, maze, blue.xDistance, blue.yDistance, false, blue.moveVertical, blue.moveHorizontal);
+                    blue.ghostCollisionWithPacMan(Images[4].sprite, window);
+                }
             }
-
-
-            if (score > 5)
-            {
-                teleport(Images[3].sprite, maze);
-                pink.ghostMovement(Images[3].sprite, maze, pink.xDistance, pink.yDistance, false, pink.moveVertical, pink.moveHorizontal);
-                pink.ghostCollisionWithPacMan(Images[3].sprite, window);
-
-            }
-
-            if (score == 10)
-            {
-                Images[4].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
-
-            }
-
-            if (score >= 10)
-
-            {
-                teleport(Images[4].sprite, maze);
-                blue.ghostMovement(Images[4].sprite, maze, blue.xDistance, blue.yDistance, false, blue.moveVertical, blue.moveHorizontal);
-                blue.ghostCollisionWithPacMan(Images[4].sprite, window);
-
-            }
-
+            delete[] time;
             coinCollision(maze);
 
             // Draw the maze
