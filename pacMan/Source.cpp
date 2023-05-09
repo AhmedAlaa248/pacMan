@@ -21,8 +21,6 @@ const float pacManSpeed = 3;
 const float mazeHeight = (rows)*cellSize;
 const float mazeWidth = (columns)*cellSize;
 
-//enum ghostDir {LEFT = 0, RIGHT , UP , DOWN };
-
 struct images
 {
     Texture texture;
@@ -30,7 +28,6 @@ struct images
 };
 
 // 0 wall , 1 coin, 2 redGhostsPlace, 3 pinkGhostsPlace, 4 cyanGhostsPlace, 5 orangeGhostsPlace, 6 pacManPlace, 9 empty cell
-
 int board[rows][columns] = {
     // 0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9  0  
       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},//0
@@ -71,10 +68,12 @@ Text resolutionItems[3];
 Text playWith[2];
 bool nameEntered = false;
 bool GameOver = false;
+bool muteSound = false;
 bool resetGame = false;
 int score = 0;
 int lives = 3;
 int xDeath = 0;
+int xDistanceDev, yDistanceDev;
 void returnGameToStart();
 
 
@@ -84,14 +83,14 @@ Music moveSound;
 
 Font font;
 
-// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black,9 deathpacman,10 livespacman
-images Images[11];
+// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black,9 deathpacman,10 livespacman , checkMark
+images Images[12];
 
 struct Ghosts {
     int xA, yA;
     int xDistance, yDistance;
     bool moveVertical, moveHorizontal;
-
+   
     void ghostCollisionWithPacMan(Sprite& ghost, RenderWindow& window) {
         if (ghost.getGlobalBounds().intersects(Images[6].sprite.getGlobalBounds()))
         {
@@ -110,14 +109,7 @@ struct Ghosts {
 
         }
         if (lives == 0)
-        {
             GameOver = true;
-            //soundBuffer.loadFromFile("Sounds/pacman-lose.wav");
-            //sound.setBuffer(soundBuffer);
-            //sound.play();
-
-        }
-
     }
     void ghostCollisionWithWalls(Sprite& ghost, Sprite maze[rows][columns], int& x, int& y, bool& mV, bool& mH) {
         FloatRect ghostBoundes = ghost.getGlobalBounds();
@@ -134,7 +126,6 @@ struct Ghosts {
                     {
                         mV = true;
                         x = -x;
-                        //cout << "Left" << '\n';
                     }
                     if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x + wallBoundes.width,
                         maze[i][j].getPosition().y,
@@ -142,27 +133,23 @@ struct Ghosts {
                     {
                         mV = true;
                         x = -x;
-                        //cout << "Right" << '\n';
                     }
-
                     if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
                         maze[i][j].getPosition().y,
-                        wallBoundes.width, 1.0f)) ||
+                        wallBoundes.width, 0.5f)) ||
                         ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
                             maze[i][j].getPosition().y + wallBoundes.height,
                             wallBoundes.width, 1.0f))) {
                         mH = true;
-                        y = -y;
+                        if (&ghost != &Images[2].sprite)
+                            y = -y;
                     }
-
                 }
             }
         }
     }
     void ghostMovement(Sprite& ghost, Sprite maze[rows][columns], int& x, int& y, bool z, bool& mV, bool& mH) {
 
-
-        //TODO intRect for Animations
         if (y == 0)
             y = rand() % 3 - 1;
 
@@ -177,7 +164,8 @@ struct Ghosts {
         {
             ghost.move(0, y);
             mV = 0;
-            //Animation bayza
+            
+            //Animation
             if (y > 0)
                 yA = 3;
             else
@@ -192,7 +180,8 @@ struct Ghosts {
         {
             ghost.move(x, 0);
             mH = 0;
-            //Animation bayza
+           
+            //Animation
             if (x > 0)
                 yA = 0;
             else
@@ -202,7 +191,6 @@ struct Ghosts {
             ghost.setTextureRect(IntRect(xA * 16, yA * 16, 16, 16));
             xA++;
             xA %= 2;
-
         }
         /*else if(!moveVertical && !moveHorizontal)
         {
@@ -217,21 +205,30 @@ struct Ghosts {
                 cout << "Else" << '\t' << moveHorizontal << '\t' << moveHorizontal  << '\n';
             }
         }*/
-        else
+        else if (!moveVertical && !moveHorizontal)
         {
-            ghost.move(0, -1);
-            yA = 2;
-            xA = 0;
-            ghost.setTextureRect(IntRect(xA * 16, yA * 16, 16, 16));
-            xA++;
-            xA %= 2;
+            if (&ghost == &Images[2].sprite)
+            {
+                ghost.move(-1, 0);
+                yA = 1;
+                xA = 1;
+                ghost.setTextureRect(IntRect(xA * 16, yA * 16, 16, 16));
+                xA++;
+                xA %= 2;
+            }
+            else 
+            {
+                ghost.move(0, -1);
+
+                //Animation
+                yA = 2;
+                xA = 0;
+                ghost.setTextureRect(IntRect(xA * 16, yA * 16, 16, 16));
+                xA++;
+                xA %= 2;
+            }
         }
 
-        /*    if (xDistance != 0)
-                ghost.move(xDistance, 0);
-            else if (yDistance != 0)
-                ghost.move(0, yDistance);
-        */
         ghostCollisionWithWalls(ghost, maze, xDistance, yDistance, mV, mH);
     }
 
@@ -482,7 +479,7 @@ void ghostsDrawing() {
     {
         Images[i].sprite.setTexture(Images[i].texture);
         Images[i].sprite.setTextureRect(IntRect(xPosition * 16, yPositon * 16, 16, 16));
-        Images[i].sprite.setScale(2.5, 2.5);
+        Images[i].sprite.setScale(2.3, 2.3);
         Images[i].sprite.setPosition(xStartPosition[i], yStartPosition[i]);
     }
 }
@@ -533,6 +530,9 @@ void gameOverWindow(RenderWindow& window, string userName, Sprite maze[rows][col
                     ghostsDrawing();
                     resetGame = false;
                     score = 0;
+                    soundBuffer.loadFromFile("Sounds/start-game.wav");
+                    sound.setBuffer(soundBuffer);
+                    sound.play();
                 }
             }
             else
@@ -579,7 +579,7 @@ void scoreDraw(RenderWindow& window, string name) {
     window.draw(scoreText);
 
     vector<pair <int, string>> lines;
-    pair<int, string> line;
+    pair <int, string> line;
     line.first = score;
     line.second = name;
     lines.push_back(line);
@@ -592,7 +592,7 @@ void scoreDraw(RenderWindow& window, string name) {
         ofstream offile;
         offile.open("dashboard.txt", ios::app);
         for (int i = 0; i < lines.size(); i++) {
-            offile << lines[i].second << "    " << lines[i].first << '*' << endl;
+            offile << lines[i].second << "\t" << lines[i].first << endl;
             offile.close();
         }
     }
@@ -695,16 +695,16 @@ struct Mainmenu
         }
     }
     void moveRandomly(Text text, RenderWindow& window) {
-        /*text.move(xDistance, yDistance);
+        text.move(xDistanceDev, yDistanceDev);
         //cout << xDistance;
         if (text.getPosition().x < 0 || text.getPosition().x > window.getSize().x - text.getGlobalBounds().width) {
-            xDistance = -xDistance;
+            xDistanceDev = -xDistanceDev;
 
         }
         if (text.getPosition().y < 0 || text.getPosition().y > window.getSize().y - text.getGlobalBounds().height)
         {
-            xDistance = -yDistance;
-        }*/
+            yDistanceDev = -yDistanceDev;
+        }
     }
     void newGameItem(RenderWindow& window, Sprite maze[rows][columns], Clock clock, string name) {
 
@@ -752,7 +752,7 @@ struct Mainmenu
                 if (time[1] == 10 && time[0] == 0)
                     Images[3].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
 
-                if (time[1] >= 10)
+                if (time[1] >= 10 || time[0] > 0)
                 {
                     teleport(Images[3].sprite, maze);
                     pink.ghostMovement(Images[3].sprite, maze, pink.xDistance, pink.yDistance, false, pink.moveVertical, pink.moveHorizontal);
@@ -762,7 +762,7 @@ struct Mainmenu
                 if (time[1] == 15 && time[0] == 0)
                     Images[4].sprite.setPosition(Vector2f(xStartPosition[5], yStartPosition[5]));
 
-                if (time[1] >= 15)
+                if (time[1] >= 15 || time[0] > 0)
                 {
                     teleport(Images[4].sprite, maze);
                     blue.ghostMovement(Images[4].sprite, maze, blue.xDistance, blue.yDistance, false, blue.moveVertical, blue.moveHorizontal);
@@ -812,20 +812,21 @@ struct Mainmenu
         ifstream infile;
         infile.open("dashboard.txt", ios::in);
 
-        vector<string> lines;
-        string sLine;
+        vector<pair<int, string>> lines;
+        pair<int, string> line;
+        
 
-        while (getline(infile, sLine, '*')) {
-
-            lines.push_back(sLine);
+        while (infile >> line.second >> line.first) {
+            lines.push_back(line);
         }
 
-        //adding at end
+        sort(lines.rbegin(), lines.rend());
+
         for (int i = 0; i < lines.size(); i++) {
             bestscoredraw[i].setFont(font);
             bestscoredraw[i].setFillColor(Color::White);
             bestscoredraw[i].setCharacterSize(50);
-            bestscoredraw[i].setString(lines[i]);
+            bestscoredraw[i].setString(lines[i].second + '\t' + to_string(lines[i].first));
             bestscoredraw[i].setPosition((window.getSize().x / 3), 100 * i + 200);
         }
 
@@ -845,9 +846,16 @@ struct Mainmenu
             window.draw(bestscoredraw[i]);
     }
     void settingsItem(RenderWindow& window) {
+        Images[11].texture.loadFromFile("Textures/check_mark.png");
+        Images[11].sprite.setTexture(Images[11].texture);
+
         Font font;
         font.loadFromFile("Fonts/almosnow.ttf");
 
+        Text soundT;
+        RectangleShape soundRec;
+
+        
         Text resolutionText, settingsText, playText;
         settingsText.setFont(font);
         settingsText.setFillColor(Color::Yellow);
@@ -870,6 +878,20 @@ struct Mainmenu
         resolutionItems[1].setString("1980 * 1060      -");
         resolutionItems[2].setString("1680 * 1050");
 
+        soundT.setString("Sound");
+        soundT.setFont(font);
+        soundT.setFillColor(Color::Yellow);
+        soundT.setCharacterSize(75);
+        soundT.setPosition(70, 490);
+
+        soundRec.setFillColor(Color::Transparent);
+        soundRec.setOutlineThickness(2.f);
+        soundRec.setOutlineColor(Color::White);
+        soundRec.setSize(Vector2f(50, 50));
+
+        soundRec.setPosition(10, 515);
+
+
         for (int i = 0; i < 3; i++) {
             resolutionItems[i].setFont(font);
             resolutionItems[i].setCharacterSize(65);
@@ -891,6 +913,20 @@ struct Mainmenu
                 else
                     resolutionItems[i].setFillColor(Color::Yellow);
             }
+        }
+
+        soundT.setFillColor(Color::White);
+        if (soundT.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+        {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                window.draw(Images[11].sprite);
+                soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                sound.setBuffer(soundBuffer);
+                sound.play();
+            }
+            else
+                soundT.setFillColor(Color::Yellow);
         }
 
         playWith[0].setString("ARROWS    -");
@@ -920,6 +956,8 @@ struct Mainmenu
         window.draw(settingsText);
         window.draw(resolutionText);
         window.draw(playText);
+        window.draw(soundRec);
+        window.draw(soundT);
         backToMenu(window);
     }
     void developersItem(RenderWindow& window) {
@@ -943,7 +981,7 @@ struct Mainmenu
         FCIS.setPosition(35, 20);
 
 
-        //moveRandomly(ourNames, window);
+        moveRandomly(ourNames, window);
 
         backToMenu(window);
 
@@ -1053,8 +1091,9 @@ struct Mainmenu
 };
 
 void intializeVariables() {
+   
     red.xDistance = (rand() % 3) - 1;
-    red.yDistance = (rand() % 3) - 1;
+    red.yDistance = 1;
     pink.xDistance = (rand() % 3) - 1;
     pink.yDistance = (rand() % 3) - 1;
     orange.xDistance = (rand() % 3) - 1;
@@ -1070,6 +1109,9 @@ void intializeVariables() {
     orange.moveVertical = false;
     blue.moveHorizontal = false;
     blue.moveVertical = false;
+
+    xDistanceDev = 10 ;
+    yDistanceDev = 10 ;
 
     windowNum = 5;
 }
