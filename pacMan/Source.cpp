@@ -97,8 +97,9 @@ struct Ghosts {
             lives--;
             soundBuffer.loadFromFile("Sounds/pacman-lose.wav");
             sound.setBuffer(soundBuffer);
-            sound.play();
-            
+            if (!muteSound)
+                sound.play();
+
             //TODO Edit death
             Images[9].texture.loadFromFile("Textures/Death.png");
             Images[6].sprite.setTexture(Images[9].texture);
@@ -324,7 +325,8 @@ bool backToMenu(RenderWindow& window) {
         if (Mouse::isButtonPressed(Mouse::Left)) {
             soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
             sound.setBuffer(soundBuffer);
-            sound.play();
+            if (!muteSound)
+                sound.play();
             windowNum = 5;
             nameEntered = false;
             return true;
@@ -459,7 +461,8 @@ void coinCollision(Sprite maze[rows][columns]) {
                     score++;
                     soundBuffer.loadFromFile("Sounds/chomp2.wav");
                     sound.setBuffer(soundBuffer);
-                    sound.play();
+                    if (!muteSound)
+                        sound.play();
                 }
             }
         }
@@ -520,7 +523,8 @@ void gameOverWindow(RenderWindow& window, string userName, Sprite maze[rows][col
             if (Mouse::isButtonPressed(Mouse::Left)) {
                 soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
                 sound.setBuffer(soundBuffer);
-                sound.play();
+                if (!muteSound)
+                    sound.play();
                 windowNum = 0;
                 if (resetGame)
                 {
@@ -532,7 +536,8 @@ void gameOverWindow(RenderWindow& window, string userName, Sprite maze[rows][col
                     score = 0;
                     soundBuffer.loadFromFile("Sounds/start-game.wav");
                     sound.setBuffer(soundBuffer);
-                    sound.play();
+                    if (!muteSound)
+                        sound.play();
                 }
             }
             else
@@ -686,7 +691,8 @@ struct Mainmenu
                 {
                     soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
                     sound.setBuffer(soundBuffer);
-                    sound.play();
+                    if(!muteSound)
+                        sound.play();
                     return i;
                 }
                 else
@@ -851,90 +857,74 @@ struct Mainmenu
 
         Font font;
         font.loadFromFile("Fonts/almosnow.ttf");
+        
+        Mouse mouse;
 
-        Text soundT;
         RectangleShape soundRec;
 
+        Text resolutionText, settingsText, playText, soundT;
         
-        Text resolutionText, settingsText, playText;
         settingsText.setFont(font);
-        settingsText.setFillColor(Color::Yellow);
-        settingsText.setCharacterSize(75);
-        settingsText.setString("SETTINGS");
-
-        resolutionText.setFont(font);
-        resolutionText.setFillColor(Color::White);
-        resolutionText.setCharacterSize(75);
-        resolutionText.setPosition(10, 150);
-        resolutionText.setString("RESOLUTION : ");
-
+        soundT.setFont(font);
         playText.setFont(font);
-        playText.setFillColor(Color::White);
+        resolutionText.setFont(font);
+        
+        settingsText.setFillColor(Color::Yellow);
+        soundT.setFillColor(Color::Yellow);
+        soundRec.setFillColor(Color::Transparent);
+        
+        settingsText.setCharacterSize(75);
+        soundT.setCharacterSize(75);
         playText.setCharacterSize(75);
-        playText.setPosition(10, 390);
+        resolutionText.setCharacterSize(75);
+        
+        settingsText.setString("SETTINGS");
+        soundT.setString("Mute");
         playText.setString("PLAY WITH : ");
+        playWith[0].setString("ARROWS    -");
+        playWith[1].setString("W-A-S-D");
 
+        resolutionText.setString("RESOLUTION : ");
         resolutionItems[0].setString("2560 * 1600      -");
         resolutionItems[1].setString("1980 * 1060      -");
         resolutionItems[2].setString("1680 * 1050");
 
-        soundT.setString("Sound");
-        soundT.setFont(font);
-        soundT.setFillColor(Color::Yellow);
-        soundT.setCharacterSize(75);
-        soundT.setPosition(70, 490);
+        soundT.setPosition(70, 130);
+        soundRec.setPosition(10, 155);
+        Images[11].sprite.setPosition(10, 155);
+        playText.setPosition(10, 265);
+        resolutionText.setPosition(10, 425);
 
-        soundRec.setFillColor(Color::Transparent);
         soundRec.setOutlineThickness(2.f);
         soundRec.setOutlineColor(Color::White);
         soundRec.setSize(Vector2f(50, 50));
 
-        soundRec.setPosition(10, 515);
-
-
-        for (int i = 0; i < 3; i++) {
-            resolutionItems[i].setFont(font);
-            resolutionItems[i].setCharacterSize(65);
-            resolutionItems[i].setPosition(500 + i * 500, 150);
-            window.draw(resolutionItems[i]);
-        }
-        Mouse mouse;
-        for (int i = 0; i < 3; i++)
-        {
-            resolutionItems[i].setFillColor(Color::White);
-            if (resolutionItems[i].getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
-            {
-                if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-                {
-                    soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
-                    sound.setBuffer(soundBuffer);
-                    sound.play();
-                }
-                else
-                    resolutionItems[i].setFillColor(Color::Yellow);
-            }
-        }
-
+        Images[11].sprite.setScale(0.1, 0.1);
+        
         soundT.setFillColor(Color::White);
         if (soundT.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
         {
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
-                window.draw(Images[11].sprite);
                 soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
                 sound.setBuffer(soundBuffer);
-                sound.play();
+                if (muteSound)
+                    muteSound = false;
+                else
+                    muteSound = true;
+                
+                if (!muteSound)
+                    sound.play();
+                
             }
             else
                 soundT.setFillColor(Color::Yellow);
         }
 
-        playWith[0].setString("ARROWS    -");
-        playWith[1].setString("W-A-S-D");
         for (int i = 0; i < 2; i++) {
             playWith[i].setFont(font);
             playWith[i].setCharacterSize(65);
-            playWith[i].setPosition(500 + i * 360, 390);
+            playWith[i].setPosition(500 + i * 360, 265);
             window.draw(playWith[i]);
         }
 
@@ -947,12 +937,42 @@ struct Mainmenu
                 {
                     soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
                     sound.setBuffer(soundBuffer);
-                    sound.play();
+                    if (!muteSound)
+                        sound.play();
                 }
                 else
                     playWith[i].setFillColor(Color::Yellow);
             }
         }
+
+        for (int i = 0; i < 3; i++) {
+            resolutionItems[i].setFont(font);
+            resolutionItems[i].setCharacterSize(65);
+            resolutionItems[i].setPosition(500 + i * 500, 425);
+            window.draw(resolutionItems[i]);
+        }
+        
+        for (int i = 0; i < 3; i++)
+        {
+            resolutionItems[i].setFillColor(Color::White);
+            if (resolutionItems[i].getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+            {
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                {
+                    soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                    sound.setBuffer(soundBuffer);
+                    if (!muteSound)
+                        sound.play();
+                }
+                else
+                    resolutionItems[i].setFillColor(Color::Yellow);
+            }
+        }
+
+
+        if (muteSound)
+            window.draw(Images[11].sprite); 
+
         window.draw(settingsText);
         window.draw(resolutionText);
         window.draw(playText);
@@ -1045,7 +1065,8 @@ struct Mainmenu
                         sound.setBuffer(soundBuffer);
 
                         nameEntered = true;
-                        sound.play();
+                        if (!muteSound)
+                            sound.play();
                         break;
                     }
                     else
@@ -1057,7 +1078,8 @@ struct Mainmenu
                     sound.setBuffer(soundBuffer);
 
                     nameEntered = true;
-                    sound.play();
+                    if (!muteSound)
+                        sound.play();
                     break;
                 }
                 Name.setString(enter_player_name);
@@ -1077,7 +1099,8 @@ struct Mainmenu
                 if (Mouse::isButtonPressed(Mouse::Left)) {
                     soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
                     sound.setBuffer(soundBuffer);
-                    sound.play();
+                    if (!muteSound)
+                        sound.play();
                     windowNum = 5;
                     break;
                 }
