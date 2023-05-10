@@ -150,6 +150,8 @@ struct Ghosts {
         }
     }
     void ghostMovement(Sprite& ghost, Sprite maze[rows][columns], int& x, int& y, bool z, bool& mV, bool& mH) {
+        Vector2f left_reightghostMovement(x, 0);
+        Vector2f up_downghostMovement(0, y);
 
         if (y == 0)
             y = rand() % 3 - 1;
@@ -163,7 +165,7 @@ struct Ghosts {
 
         if (mV)
         {
-            ghost.move(0, y);
+            ghost.move(up_downghostMovement);
             mV = 0;
             
             //Animation
@@ -179,7 +181,8 @@ struct Ghosts {
         }
         else if (mH)
         {
-            ghost.move(x, 0);
+            ghost.move(left_reightghostMovement);
+
             mH = 0;
            
             //Animation
@@ -350,50 +353,49 @@ void pacManDrawing() {
     Images[6].sprite.setPosition(xStartPosition[6], yStartPosition[6]);
     Images[6].sprite.setScale(2.5, 2.5);
 }
-void movingPacman(Sprite& pacMan, int& x, int& y) {
-    bool playSound = false;
+void movingPacman(Sprite& pacMan, int& x, int& y, Sprite maze[rows][columns]) {
+
+    Vector2f leftpacManMovement(-pacManSpeed, 0);
+    Vector2f rightpacManMovement(pacManSpeed, 0);
+    Vector2f uppacManMovement(0, -pacManSpeed);
+    Vector2f downpacManMovement(0, pacManSpeed);
+
     if (Keyboard::isKeyPressed(Keyboard::Left) && pacMan.getPosition().x > 0)
     {
-        pacMan.move(-pacManSpeed, 0);
+        pacMan.move(leftpacManMovement);
         x++;
         x %= 3;
         y = 1;
         pacMan.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
-        playSound = true;
+        //  playSound = true;
     }
-    else if (Keyboard::isKeyPressed(Keyboard::Right) && pacMan.getPosition().x < 1864)
+    if (Keyboard::isKeyPressed(Keyboard::Right) && pacMan.getPosition().x < 1864)
     {
-        pacMan.move(pacManSpeed, 0);
+        pacMan.move(rightpacManMovement);
         x++;
         x %= 3;
         y = 0;
         pacMan.setTextureRect(IntRect(x * 16, y * 15, 16, 15));
-        playSound = true;
+        // playSound = true;
     }
     else if (Keyboard::isKeyPressed(Keyboard::Up) && pacMan.getPosition().y > 0)
     {
-        pacMan.move(0, -pacManSpeed);
+        pacMan.move(uppacManMovement);
         x++;
         x %= 3;
         y = 2;
         pacMan.setTextureRect(IntRect(x * 15.5, y * 16, 15.5, 16));
-        playSound = true;
+        // playSound = true;
     }
     else if (Keyboard::isKeyPressed(Keyboard::Down) && pacMan.getPosition().y < 1024)
     {
-        pacMan.move(0, pacManSpeed);
+        pacMan.move(downpacManMovement);
         x++;
         x %= 3;
         y = 3;
         pacMan.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
-        playSound = true;
+        //  playSound = true;
     }
-    if (playSound) {
-        sB.loadFromFile("Sounds/move_sound.wav");
-        s.setBuffer(sB);
-        s.play();
-    }
-    s.stop();
 }
 void teleport(Sprite& body, Sprite maze[rows][columns]) {
     FloatRect playerBoundes = body.getGlobalBounds();
@@ -718,6 +720,11 @@ struct Mainmenu
         while (window.isOpen())
         {
             int* time = startTime(ck1);
+            if (score == 225)
+            {
+                Sleep(1000);
+                resetGame = true;
+            }
             if (resetGame)
             {
                 drawMaze(maze);
@@ -741,7 +748,7 @@ struct Mainmenu
             window.clear(Color::Black);
             if (time[1] >= 4 || time[0] > 0)
             {
-                movingPacman(Images[6].sprite, xPosition, yPositon);
+                movingPacman(Images[6].sprite, xPosition, yPositon,maze);
                 wallCollision(Images[6].sprite, maze);
 
                 teleport(Images[2].sprite, maze);
