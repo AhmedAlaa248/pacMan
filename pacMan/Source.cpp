@@ -87,8 +87,8 @@ Music moveSound;
 
 Font font;
 
-// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black,9 deathpacman,10 livespacman , checkMark
-images Images[12];
+// 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black, 9 deathpacman, 10 livespacman , 11 checkMark
+images Images[13];
 
 struct Button
 {
@@ -572,7 +572,7 @@ void coinCollision(Sprite maze[rows][columns]) {
                 if (board[i][j] == 1) {
                     maze[i][j].setPosition(2000000, 2000000);
                     score++;
-                    if (score % 7 == 0)
+                    if (score % 225 == 0)
                         nLevel = true;
                     soundBuffer.loadFromFile("Sounds/chomp2.wav");
                     sound.setBuffer(soundBuffer);
@@ -1012,6 +1012,8 @@ struct Mainmenu
         }
     }
     void bestScoreItem(RenderWindow& window) {
+        Images[12].texture.loadFromFile("Textures/bgFromRight.png");
+        Images[12].sprite.setTexture(Images[12].texture);
 
         Font font;
         font.loadFromFile("Fonts/Lightdot-13x6.ttf");
@@ -1044,8 +1046,6 @@ struct Mainmenu
             bestscoredraw[i].setPosition((window.getSize().x / 3), 100 * i + 200);
         }
 
-        backToMenu(window);
-
         Event event;
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed) {
@@ -1054,6 +1054,8 @@ struct Mainmenu
             /* if (Keyboard::isKeyPressed(Keyboard::Key::Up))
                  if (Keyboard::isKeyPressed(Keyboard::Key::Down))*/
         }
+        window.draw(Images[12].sprite);
+        backToMenu(window);
         window.draw(title);
 
         for (int i = 0; i < lines.size(); i++)
@@ -1061,7 +1063,9 @@ struct Mainmenu
     }
     void settingsItem(RenderWindow& window) {
         Images[11].texture.loadFromFile("Textures/check_mark.png");
-        
+        Images[12].texture.loadFromFile("Textures/bgFromLeft.png");
+        Images[12].sprite.setTexture(Images[12].texture);
+
         Font font;
         font.loadFromFile("Fonts/almosnow.ttf");
         
@@ -1175,6 +1179,8 @@ struct Mainmenu
                 wasdBTN.text.setFillColor(Color::Yellow);
         }
 
+        window.draw(Images[12].sprite);
+
         for (int i = 0; i < 3; i++) {
             resolutionItems[i].setFont(font);
             resolutionItems[i].setCharacterSize(65);
@@ -1220,6 +1226,9 @@ struct Mainmenu
         backToMenu(window);
     }
     void developersItem(RenderWindow& window) {
+        Images[12].texture.loadFromFile("Textures/devBG.png");
+        Images[12].sprite.setTexture(Images[12].texture);
+
         font.loadFromFile("Fonts/actionj.ttf");
 
         Text ourNames, FCIS;
@@ -1240,7 +1249,7 @@ struct Mainmenu
         FCIS.setPosition(35, 20);
 
        // moveRandomly(ourNames, window);
-
+        window.draw(Images[12].sprite);
         backToMenu(window);
 
         window.draw(FCIS);
