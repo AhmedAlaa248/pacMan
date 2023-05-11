@@ -142,7 +142,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="C:\Users\Ahmed Alaa\Desktop\pacMan.ico" />
+    <Image Include="Textures\pacMan.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource1.h" />

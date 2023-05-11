@@ -20,7 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="C:\Users\Ahmed Alaa\Desktop\pacMan.ico">
+    <Image Include="Textures\pacMan.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
