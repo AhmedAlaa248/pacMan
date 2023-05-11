@@ -1,3 +1,8 @@
-khattab	47
-kha	224
-khattab	52
+a	224
+a	225
+a	225
+s	51
+Alaa	53
+a	458
+s	7
+s	13

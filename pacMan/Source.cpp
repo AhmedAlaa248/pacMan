@@ -65,18 +65,21 @@ float xStart = (modeWidth - mazeWidth) / 2;
 float yStart = (modeHeight - mazeHeight) / 2;
 Text mainMenuItems[5];
 Text resolutionItems[3];
-Text playWith[2];
 bool nameEntered = false;
 bool GameOver = false;
 bool muteSound = false;
 bool resetGame = false;
+bool moveWithWASD = false;
+bool moveWithArrows = true;
+bool startNewLevel = false;
+bool nLevel = false;
+//bool changeSprites = false;
 int score = 0;
 int lives = 3;
+int level = 1;
 int xDeath = 0;
-bool changeSprites = false;
 int xDistanceDev, yDistanceDev;
 void returnGameToStart();
-
 
 SoundBuffer soundBuffer, sB;
 Sound sound, s;
@@ -86,6 +89,48 @@ Font font;
 
 // 0 wall, 1 coin, 2 redGhost, 3 pinkGhost, 4 cyanGhost, 5 orangeGhost, 6 pacMan, 7 menuBg, 8 Black,9 deathpacman,10 livespacman , checkMark
 images Images[12];
+
+struct Button
+{
+    Text text;
+    RectangleShape rectangle;
+    Sprite sprite;
+
+    void createRect(RectangleShape& rect) {
+        rect.setFillColor(Color::Transparent);
+        rect.setOutlineThickness(2.f);
+        rect.setSize(Vector2f(50, 50));
+        rect.setOutlineColor(Color::White);
+
+    }
+    void createText(Text& t , string s) {
+        t.setFont(font);
+        t.setCharacterSize(75);
+        t.setString(s);
+    }
+    void textOnClick(Text& T , bool& b) {
+        Mouse mouse;
+        T.setFillColor(Color::White);
+        if (T.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+        {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                sound.setBuffer(soundBuffer);
+                if (b)
+                    b = false;
+                else
+                    b = true;
+
+                if (!muteSound)
+                    sound.play();
+
+            }
+            else
+                T.setFillColor(Color::Yellow);
+        }
+    }
+};
 
 struct Ghosts {
     int xA, yA;
@@ -122,6 +167,7 @@ struct Ghosts {
                 if (board[i][j] == 0) {
                     FloatRect wallBoundes = maze[i][j].getGlobalBounds();
 
+                    //check collision from left of the wall
                     if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
                         maze[i][j].getPosition().y,
                         1.0f, maze[i][j].getGlobalBounds().height)))
@@ -129,6 +175,8 @@ struct Ghosts {
                         mV = true;
                         x = -x;
                     }
+
+                    //check collision from right of the wall
                     if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x + wallBoundes.width,
                         maze[i][j].getPosition().y,
                         1.0f, maze[i][j].getGlobalBounds().height)))
@@ -136,12 +184,20 @@ struct Ghosts {
                         mV = true;
                         x = -x;
                     }
+
+                    //check collision from top of the wall
                     if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
                         maze[i][j].getPosition().y,
-                        wallBoundes.width, 0.5f)) ||
-                        ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
-                            maze[i][j].getPosition().y + wallBoundes.height,
-                            wallBoundes.width, 1.0f))) {
+                        wallBoundes.width, 0.5f))) {
+                        mH = true;
+                        if (&ghost != &Images[1].sprite)
+                                y = -y;
+                    }
+
+                    //check collision from bottom of the wall
+                    if (ghostBoundes.intersects(FloatRect(maze[i][j].getPosition().x,
+                        maze[i][j].getPosition().y + wallBoundes.height,
+                        wallBoundes.width, 1.0f))) {
                         mH = true;
                         if (&ghost != &Images[2].sprite)
                             y = -y;
@@ -260,7 +316,7 @@ void returnGameToStart()
 }
 
 void drawMaze(Sprite maze[rows][columns]) {
-    if (changeSprites) {
+    if (level % 2 == 0) {
         Images[0].texture.loadFromFile("Textures/brickwall.png");
         Images[1].texture.loadFromFile("Textures/pound.png");
     }else
@@ -284,8 +340,8 @@ void drawMaze(Sprite maze[rows][columns]) {
             case 1:
                 maze[i][j].setTexture(Images[1].texture);
                 maze[i][j].setPosition(xStart + j * cellSize, yStart + i * cellSize);
-               if(changeSprites)
-                   maze[i][j].setScale(0.9,0.9);
+                if (level % 2 == 0)
+                    maze[i][j].setScale(0.9,0.9);
                    break;
 
                 // setting initial pos for monsters
@@ -341,7 +397,7 @@ bool backToMenu(RenderWindow& window) {
                 sound.play();
             windowNum = 5;
             nameEntered = false;
-            changeSprites = false;
+            level = 1;
             return true;
         }
         else
@@ -363,7 +419,7 @@ void pacManDrawing() {
     Images[6].sprite.setPosition(xStartPosition[6], yStartPosition[6]);
     Images[6].sprite.setScale(2.5, 2.5);
 }
-void movingPacman(Sprite& pacMan, int& x, int& y, Sprite maze[rows][columns]) {
+void movingPacmanWithArrows(Sprite& pacMan, int& x, int& y, Sprite maze[rows][columns]) {
 
     Vector2f leftpacManMovement(-pacManSpeed, 0);
     Vector2f rightpacManMovement(pacManSpeed, 0);
@@ -407,6 +463,51 @@ void movingPacman(Sprite& pacMan, int& x, int& y, Sprite maze[rows][columns]) {
         //  playSound = true;
     }
 }
+void movingPacmanWithWASD(Sprite& pacMan, int& x, int& y, Sprite maze[rows][columns]) {
+
+    Vector2f leftpacManMovement(-pacManSpeed, 0);
+    Vector2f rightpacManMovement(pacManSpeed, 0);
+    Vector2f uppacManMovement(0, -pacManSpeed);
+    Vector2f downpacManMovement(0, pacManSpeed);
+
+    if (Keyboard::isKeyPressed(Keyboard::A) && pacMan.getPosition().x > 0)
+    {
+        pacMan.move(leftpacManMovement);
+        x++;
+        x %= 3;
+        y = 1;
+        pacMan.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
+        //  playSound = true;
+    }
+    if (Keyboard::isKeyPressed(Keyboard::D) && pacMan.getPosition().x < 1864)
+    {
+        pacMan.move(rightpacManMovement);
+        x++;
+        x %= 3;
+        y = 0;
+        pacMan.setTextureRect(IntRect(x * 16, y * 15, 16, 15));
+        // playSound = true;
+    }
+    else if (Keyboard::isKeyPressed(Keyboard::W) && pacMan.getPosition().y > 0)
+    {
+        pacMan.move(uppacManMovement);
+        x++;
+        x %= 3;
+        y = 2;
+        pacMan.setTextureRect(IntRect(x * 15.5, y * 16, 15.5, 16));
+        // playSound = true;
+    }
+    else if (Keyboard::isKeyPressed(Keyboard::S) && pacMan.getPosition().y < 1024)
+    {
+        pacMan.move(downpacManMovement);
+        x++;
+        x %= 3;
+        y = 3;
+        pacMan.setTextureRect(IntRect(x * 16, y * 16, 16, 16));
+        //  playSound = true;
+    }
+}
+
 void teleport(Sprite& body, Sprite maze[rows][columns]) {
     FloatRect playerBoundes = body.getGlobalBounds();
     FloatRect wallBoundesLeft = maze[11][0].getGlobalBounds();
@@ -471,6 +572,8 @@ void coinCollision(Sprite maze[rows][columns]) {
                 if (board[i][j] == 1) {
                     maze[i][j].setPosition(2000000, 2000000);
                     score++;
+                    if (score % 7 == 0)
+                        nLevel = true;
                     soundBuffer.loadFromFile("Sounds/chomp2.wav");
                     sound.setBuffer(soundBuffer);
                     if (!muteSound)
@@ -541,7 +644,7 @@ void gameOverWindow(RenderWindow& window, string userName, Sprite maze[rows][col
                 if (resetGame)
                 {
                     lives = 3;
-                    changeSprites = false;
+                    level = 1;
                     drawMaze(maze);
                     pacManDrawing();
                     ghostsDrawing();
@@ -569,7 +672,7 @@ void gameOverWindow(RenderWindow& window, string userName, Sprite maze[rows][col
 
     }
 }
-void newlevelwindow(RenderWindow& window, string userName) {
+void newlevelwindow(RenderWindow& window, string userName , Sprite maze[rows][columns]) {
     font.loadFromFile("Fonts/almosnow.ttf");
     Mouse mouse;
     string congratulations = "Congratulations " + userName + " !";
@@ -596,6 +699,7 @@ void newlevelwindow(RenderWindow& window, string userName) {
             if (event.type == Event::Closed)
                 window.close();
         }
+       
         nextLevel.setFillColor(Color::White);
         if (nextLevel.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
             if (Mouse::isButtonPressed(Mouse::Left)) {
@@ -603,16 +707,21 @@ void newlevelwindow(RenderWindow& window, string userName) {
                 sound.setBuffer(soundBuffer);
                 if (!muteSound)
                     sound.play();
-                resetGame = true;
+               
                 windowNum = 0;
-                changeSprites = 1;
-                soundBuffer.loadFromFile("Sounds/start-game.wav");
-                sound.setBuffer(soundBuffer);
-                if (!muteSound)
-                    sound.play();
-                
-                    
-
+                if (startNewLevel)
+                {
+                    level++;
+                    drawMaze(maze);
+                    pacManDrawing();
+                    ghostsDrawing();
+                    startNewLevel = false;
+                    soundBuffer.loadFromFile("Sounds/start-game.wav");
+                    sound.setBuffer(soundBuffer);
+                    if (!muteSound)
+                        sound.play();
+                    break;
+                }
             }
             else 
                 nextLevel.setFillColor(Color::Yellow);
@@ -631,7 +740,6 @@ void newlevelwindow(RenderWindow& window, string userName) {
     }
 
 }
-
 
 int* startTime(Clock& clock) {
     Time passed;
@@ -776,18 +884,18 @@ struct Mainmenu
             }
         }
     }
-    void moveRandomly(Text text, RenderWindow& window) {
-        text.move(xDistanceDev, yDistanceDev);
-        //cout << xDistance;
-        if (text.getPosition().x < 0 || text.getPosition().x > window.getSize().x - text.getGlobalBounds().width) {
-            xDistanceDev = -xDistanceDev;
+      /*  void moveRandomly(Text text, RenderWindow& window) {
+            text.move(xDistanceDev, yDistanceDev);
+            //cout << xDistance;
+            if (text.getPosition().x < 0 || text.getPosition().x > window.getSize().x - text.getGlobalBounds().width) {
+                xDistanceDev = -xDistanceDev;
 
-        }
-        if (text.getPosition().y < 0 || text.getPosition().y > window.getSize().y - text.getGlobalBounds().height)
-        {
-            yDistanceDev = -yDistanceDev;
-        }
-    }
+            }
+            if (text.getPosition().y < 0 || text.getPosition().y > window.getSize().y - text.getGlobalBounds().height)
+            {
+                yDistanceDev = -yDistanceDev;
+            }
+        }*/
     void newGameItem(RenderWindow& window, Sprite maze[rows][columns], Clock clock, string name) {
 
         Clock ck, ck1;
@@ -804,6 +912,13 @@ struct Mainmenu
                 score = 0;
             }
 
+/*            if (startNewLevel) {
+                drawMaze(maze);
+                pacManDrawing();
+                ghostsDrawing();
+                startNewLevel = false;
+            }
+*/
             // Handle events
             Event event;
             while (window.pollEvent(event))
@@ -818,16 +933,19 @@ struct Mainmenu
             window.clear(Color::Black);
             if (time[1] >= 4 || time[0] > 0)
             {
-                movingPacman(Images[6].sprite, xPosition, yPositon,maze);
+                if(moveWithArrows)
+                    movingPacmanWithArrows(Images[6].sprite, xPosition, yPositon,maze);
+                else if (moveWithWASD)
+                    movingPacmanWithWASD(Images[6].sprite, xPosition, yPositon, maze);
+
                 wallCollision(Images[6].sprite, maze);
 
                 teleport(Images[2].sprite, maze);
                 teleport(Images[5].sprite, maze);
                 teleport(Images[6].sprite, maze);
 
-                red.ghostMovement(Images[2].sprite, maze, red.xDistance, red.yDistance, true, red.moveVertical, red.moveHorizontal);
-                orange.ghostMovement(Images[5].sprite, maze, orange.xDistance, orange.yDistance, false, orange.moveVertical, orange.moveHorizontal);
-
+                red.ghostMovement(Images[2].sprite, maze, red.xDistance, red.yDistance, false, red.moveVertical, red.moveHorizontal);
+                orange.ghostMovement(Images[5].sprite, maze, orange.xDistance, orange.yDistance, true, orange.moveVertical, orange.moveHorizontal);
                 orange.ghostCollisionWithPacMan(Images[5].sprite, window);
                 red.ghostCollisionWithPacMan(Images[2].sprite, window);
 
@@ -878,13 +996,17 @@ struct Mainmenu
                 resetGame = true;
                 break;
             }
-            if (score == 225)
+            if (nLevel && score != 0)
             {
+                soundBuffer.loadFromFile("Sounds/winningSound.wav");
+                sound.setBuffer(soundBuffer);
+                if (!muteSound)
+                    sound.play();
+                
                 windowNum = 7;
-                resetGame = true;
+                startNewLevel = true;
+                nLevel = false;
                 break;
-
-                // Sleep(1000);
 
             }
         }
@@ -939,102 +1061,124 @@ struct Mainmenu
     }
     void settingsItem(RenderWindow& window) {
         Images[11].texture.loadFromFile("Textures/check_mark.png");
-        Images[11].sprite.setTexture(Images[11].texture);
-
+        
         Font font;
         font.loadFromFile("Fonts/almosnow.ttf");
         
         Mouse mouse;
 
-        RectangleShape soundRec;
+        Text resolutionText, settingsText, playText;
 
-        Text resolutionText, settingsText, playText, soundT;
+        Button soundBTN, wasdBTN, arrowsBTN;
+      
+        soundBTN.createText(soundBTN.text, "Mute");
+        wasdBTN.createText(wasdBTN.text, "\tW-A-S-D");
+        arrowsBTN.createText(arrowsBTN.text,"ARROWS\t-");
+
+        soundBTN.sprite.setTexture(Images[11].texture);
+        soundBTN.createRect(soundBTN.rectangle);
         
+        wasdBTN.sprite.setTexture(Images[11].texture);
+        wasdBTN.createRect(wasdBTN.rectangle);
+
+        arrowsBTN.sprite.setTexture(Images[11].texture);
+        arrowsBTN.createRect(arrowsBTN.rectangle);
+
         settingsText.setFont(font);
-        soundT.setFont(font);
         playText.setFont(font);
         resolutionText.setFont(font);
         
         settingsText.setFillColor(Color::Yellow);
-        soundT.setFillColor(Color::Yellow);
-        soundRec.setFillColor(Color::Transparent);
         
         settingsText.setCharacterSize(75);
-        soundT.setCharacterSize(75);
         playText.setCharacterSize(75);
         resolutionText.setCharacterSize(75);
         
         settingsText.setString("SETTINGS");
-        soundT.setString("Mute");
+        
         playText.setString("PLAY WITH : ");
-        playWith[0].setString("ARROWS    -");
-        playWith[1].setString("W-A-S-D");
 
-        resolutionText.setString("RESOLUTION : ");
-        resolutionItems[0].setString("2560 * 1600      -");
-        resolutionItems[1].setString("1980 * 1060      -");
-        resolutionItems[2].setString("1680 * 1050");
+        resolutionText.setString("RESOLUTION:");
+        resolutionItems[0].setString("2560 * 1600\t-");
+        resolutionItems[1].setString("\t1980 * 1060\t-");
+        resolutionItems[2].setString("\t1680 * 1050");
 
-        soundT.setPosition(70, 130);
-        soundRec.setPosition(10, 155);
-        Images[11].sprite.setPosition(10, 155);
+        soundBTN.text.setPosition(70, 130);
+        soundBTN.rectangle.setPosition(10, 155);
+        soundBTN.sprite.setPosition(10, 155);
+        wasdBTN.text.setPosition(860, 265);
+        wasdBTN.rectangle.setPosition(860, 290);
+        wasdBTN.sprite.setPosition(860, 290);
+        arrowsBTN.text.setPosition(500, 265);
+        arrowsBTN.rectangle.setPosition(445, 290);
+        arrowsBTN.sprite.setPosition(440, 290);
+
         playText.setPosition(10, 265);
         resolutionText.setPosition(10, 425);
 
-        soundRec.setOutlineThickness(2.f);
-        soundRec.setOutlineColor(Color::White);
-        soundRec.setSize(Vector2f(50, 50));
+        soundBTN.sprite.setScale(0.1, 0.1);
+        wasdBTN.sprite.setScale(0.1, 0.1);
+        arrowsBTN.sprite.setScale(0.1, 0.1);
 
-        Images[11].sprite.setScale(0.1, 0.1);
+        soundBTN.textOnClick(soundBTN.text, muteSound);
         
-        soundT.setFillColor(Color::White);
-        if (soundT.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+        //arrows button click
+        arrowsBTN.text.setFillColor(Color::White);
+        if (arrowsBTN.text.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
         {
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
                 soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
                 sound.setBuffer(soundBuffer);
-                if (muteSound)
-                    muteSound = false;
-                else
-                    muteSound = true;
-                
-                if (!muteSound)
-                    sound.play();
-                
-            }
-            else
-                soundT.setFillColor(Color::Yellow);
-        }
-
-        for (int i = 0; i < 2; i++) {
-            playWith[i].setFont(font);
-            playWith[i].setCharacterSize(65);
-            playWith[i].setPosition(500 + i * 360, 265);
-            window.draw(playWith[i]);
-        }
-
-        for (int i = 0; i < 2; i++)
-        {
-            playWith[i].setFillColor(Color::White);
-            if (playWith[i].getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
-            {
-                if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                if (moveWithArrows)
                 {
-                    soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
-                    sound.setBuffer(soundBuffer);
-                    if (!muteSound)
-                        sound.play();
+                    moveWithArrows = false;
+                    moveWithWASD = true;
                 }
                 else
-                    playWith[i].setFillColor(Color::Yellow);
+                {
+                    moveWithArrows = true;
+                    moveWithWASD = false;
+                }
+
+                if (!muteSound)
+                    sound.play();
+
             }
+            else
+                arrowsBTN.text.setFillColor(Color::Yellow);
+        }
+      
+        //wasd button click
+        wasdBTN.text.setFillColor(Color::White);
+        if (wasdBTN.text.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y))
+        {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                sound.setBuffer(soundBuffer);
+                if (moveWithWASD)
+                {
+                    moveWithWASD = false;
+                    moveWithArrows = true;
+                }
+                else
+                {
+                    moveWithWASD = true;
+                    moveWithArrows = false;
+                }
+
+                if (!muteSound)
+                    sound.play();
+            }
+            else
+                wasdBTN.text.setFillColor(Color::Yellow);
         }
 
         for (int i = 0; i < 3; i++) {
             resolutionItems[i].setFont(font);
             resolutionItems[i].setCharacterSize(65);
-            resolutionItems[i].setPosition(500 + i * 500, 425);
+            resolutionItems[i].setPosition(500 + i * 360, 425);
             window.draw(resolutionItems[i]);
         }
         
@@ -1055,15 +1199,24 @@ struct Mainmenu
             }
         }
 
-
         if (muteSound)
-            window.draw(Images[11].sprite); 
+            window.draw(soundBTN.sprite);
+
+        if (moveWithArrows)
+            window.draw(arrowsBTN.sprite);
+
+        if (moveWithWASD)
+            window.draw(wasdBTN.sprite);
 
         window.draw(settingsText);
         window.draw(resolutionText);
         window.draw(playText);
-        window.draw(soundRec);
-        window.draw(soundT);
+        window.draw(soundBTN.text);
+        window.draw(soundBTN.rectangle);
+        window.draw(wasdBTN.text);
+        window.draw(wasdBTN.rectangle);
+        window.draw(arrowsBTN.text);
+        window.draw(arrowsBTN.rectangle);
         backToMenu(window);
     }
     void developersItem(RenderWindow& window) {
@@ -1086,8 +1239,7 @@ struct Mainmenu
         FCIS.setFillColor(Color::Magenta);
         FCIS.setPosition(35, 20);
 
-
-        moveRandomly(ourNames, window);
+       // moveRandomly(ourNames, window);
 
         backToMenu(window);
 
@@ -1286,7 +1438,7 @@ int main()
             gameOverWindow(window, userName, maze);
             break;
         case 7:
-            newlevelwindow(window, userName);
+            newlevelwindow(window, userName , maze);
             break;
         }
         
