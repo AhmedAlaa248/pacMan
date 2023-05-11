@@ -73,6 +73,7 @@ bool resetGame = false;
 int score = 0;
 int lives = 3;
 int xDeath = 0;
+bool changeSprites = false;
 int xDistanceDev, yDistanceDev;
 void returnGameToStart();
 
@@ -259,9 +260,15 @@ void returnGameToStart()
 }
 
 void drawMaze(Sprite maze[rows][columns]) {
-    Images[0].texture.loadFromFile("Textures/Wall.png");
-    Images[1].texture.loadFromFile("Textures/coin.png");
-    Images[8].texture.loadFromFile("Textures/black.png");
+    if (changeSprites) {
+        Images[0].texture.loadFromFile("Textures/brickwall.png");
+        Images[1].texture.loadFromFile("Textures/pound.png");
+    }else
+    {
+        Images[0].texture.loadFromFile("Textures/Wall.png");
+        Images[1].texture.loadFromFile("Textures/coin.png");
+        Images[8].texture.loadFromFile("Textures/black.png");
+    }
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
@@ -277,7 +284,9 @@ void drawMaze(Sprite maze[rows][columns]) {
             case 1:
                 maze[i][j].setTexture(Images[1].texture);
                 maze[i][j].setPosition(xStart + j * cellSize, yStart + i * cellSize);
-                break;
+               if(changeSprites)
+                   maze[i][j].setScale(0.9,0.9);
+                   break;
 
                 // setting initial pos for monsters
             case 2:
@@ -332,6 +341,7 @@ bool backToMenu(RenderWindow& window) {
                 sound.play();
             windowNum = 5;
             nameEntered = false;
+            changeSprites = false;
             return true;
         }
         else
@@ -521,7 +531,7 @@ void gameOverWindow(RenderWindow& window, string userName, Sprite maze[rows][col
         }
 
         tryAgain.setFillColor(Color::White);
-        if (tryAgain.getGlobalBounds().contains(tryAgain.getPosition().x, mouse.getPosition().y)) {
+        if (tryAgain.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
             if (Mouse::isButtonPressed(Mouse::Left)) {
                 soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
                 sound.setBuffer(soundBuffer);
@@ -531,6 +541,7 @@ void gameOverWindow(RenderWindow& window, string userName, Sprite maze[rows][col
                 if (resetGame)
                 {
                     lives = 3;
+                    changeSprites = false;
                     drawMaze(maze);
                     pacManDrawing();
                     ghostsDrawing();
@@ -558,6 +569,69 @@ void gameOverWindow(RenderWindow& window, string userName, Sprite maze[rows][col
 
     }
 }
+void newlevelwindow(RenderWindow& window, string userName) {
+    font.loadFromFile("Fonts/almosnow.ttf");
+    Mouse mouse;
+    string congratulations = "Congratulations " + userName + " !";
+    Text levelPassed("Level Passed", font, 200);
+    Text nextLevel("Next Level", font, 50);
+    Text niceTry(congratulations, font, 120);
+
+    levelPassed.setPosition((window.getSize().x / 2) - (levelPassed.getGlobalBounds().width / 2), (window.getSize().y / 5) - (levelPassed.getGlobalBounds().height / 2));
+    levelPassed.setFillColor(Color::White);
+
+    nextLevel.setPosition((window.getSize().x / 4), (window.getSize().y / 5) * 4);
+    nextLevel.setFillColor(Color::White);
+
+    niceTry.setPosition((window.getSize().x / 2) - (niceTry.getGlobalBounds().width / 2), (window.getSize().y / 4) + (niceTry.getGlobalBounds().height));
+    niceTry.setFillColor(Color(155, 114, 205));
+
+    while (window.isOpen())
+    {
+        // Handle events
+        Event event;
+        while (window.pollEvent(event))
+        {
+            // Close the window if the close button is pressed
+            if (event.type == Event::Closed)
+                window.close();
+        }
+        nextLevel.setFillColor(Color::White);
+        if (nextLevel.getGlobalBounds().contains(mouse.getPosition().x, mouse.getPosition().y)) {
+            if (Mouse::isButtonPressed(Mouse::Left)) {
+                soundBuffer.loadFromFile("Sounds/pressed_sound.wav");
+                sound.setBuffer(soundBuffer);
+                if (!muteSound)
+                    sound.play();
+                resetGame = true;
+                windowNum = 0;
+                changeSprites = 1;
+                soundBuffer.loadFromFile("Sounds/start-game.wav");
+                sound.setBuffer(soundBuffer);
+                if (!muteSound)
+                    sound.play();
+                
+                    
+
+            }
+            else 
+                nextLevel.setFillColor(Color::Yellow);
+            }
+        window.clear(Color::Black);
+
+        window.draw(nextLevel);
+        window.draw(levelPassed);
+        window.draw(niceTry);
+
+        if (backToMenu(window))
+            break;
+
+        window.display();
+
+    }
+
+}
+
 
 int* startTime(Clock& clock) {
     Time passed;
@@ -720,11 +794,7 @@ struct Mainmenu
         while (window.isOpen())
         {
             int* time = startTime(ck1);
-            if (score == 225)
-            {
-                Sleep(1000);
-                resetGame = true;
-            }
+            
             if (resetGame)
             {
                 drawMaze(maze);
@@ -807,6 +877,15 @@ struct Mainmenu
                 windowNum = 6;
                 resetGame = true;
                 break;
+            }
+            if (score == 225)
+            {
+                windowNum = 7;
+                resetGame = true;
+                break;
+
+                // Sleep(1000);
+
             }
         }
     }
@@ -1206,7 +1285,11 @@ int main()
         case 6:
             gameOverWindow(window, userName, maze);
             break;
+        case 7:
+            newlevelwindow(window, userName);
+            break;
         }
+        
 
         window.display();
     }
